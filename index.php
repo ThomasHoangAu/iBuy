@@ -1,7 +1,7 @@
 <?php
     session_start();
     if(isset($_SESSION['first_name']) and isset($_SESSION['last_name'])) {
-        $user = ucfirst($_SESSION['first_name']).' '.ucfirst($_SESSION['last_name']);
+        $userName = ucfirst($_SESSION['first_name']).' '.ucfirst($_SESSION['last_name']);
     }
 
     require_once('conn_iBuyDb.php');
@@ -53,7 +53,7 @@
                                     <div class='sign-up'>
                                     <a href='#'>
                                         <p>
-                                            ".$user."
+                                            ".$userName."
                                         </p>
                                     </a>
                                     </div>

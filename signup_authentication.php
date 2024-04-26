@@ -1,6 +1,7 @@
 <?php
     $email = $_POST['email'];
     $pass_word = $_POST['password'];
+    $hash_password = password_hash($pass_word, PASSWORD_DEFAULT);
     $first_name = $_POST['first_name'];
     $last_name = $_POST['last_name'];
     $phone = $_POST['phone'];
@@ -20,7 +21,7 @@
     }
 
     $query = "INSERT INTO customers (first_name, last_name, email, pass_word, address, city, state, postal_code, phone) 
-                VALUES ('$first_name', '$last_name', '$email', '$pass_word', '$address', '$city', '$state', '$postcode', '$phone')";
+                VALUES ('$first_name', '$last_name', '$email', '$hash_password', '$address', '$city', '$state', '$postcode', '$phone')";
     
     mysqli_query($link, $query);
     mysqli_close($link);

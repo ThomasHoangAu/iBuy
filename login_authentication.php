@@ -5,7 +5,7 @@
 
     require_once('conn_iBuyDb.php');
 
-    $query = "SELECT first_name, last_name, email, pass_word, phone from customers WHERE (email = '$email') AND (pass_word = '$pass_word')";
+    $query = "SELECT first_name, last_name, email, pass_word, phone from customers WHERE (email = '$email')";
     $result = mysqli_query($link, $query);
     
     if(mysqli_num_rows($result) == 1) {
@@ -22,13 +22,16 @@
         $_SESSION['last_name'] = $last_name;
         $_SESSION['phone'] = $phone;
         $_SESSION['email'] = $email;
-        $_SESSION['pass_word'] = $pass;
         $_SESSION['loggedin'] = true;
 
-        //re-direct to home page
-        header("Location: index.php");
-        exit;
-        
+        if(password_verify($pass_word, $pass)) {
+            //re-direct to home page
+            header("Location: index.php");
+            exit;
+        }else {
+            header("Location: login.php?error=1");
+            exit;
+        }
     }else {
         header("Location: login.php?error=1");
         exit;
