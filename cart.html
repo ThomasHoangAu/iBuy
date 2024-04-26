@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" type="text/css" href="styles.css" />
+        <title>iBuy</title>
+    </head>
+    <body>
+        <header>
+            <div class="container">
+                <a href="index.html">
+                    <img class="logo" src="./assets/logo.png" alt="" />
+                </a>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="cart">
+                <div class="title">Cart</div>
+                <div class="subject">
+                    <input type="checkbox" />
+                    <div class="subject-product">Product</div>
+                    <div class="subject-price">Unit Price</div>
+                    <div class="subject-quantity">Quantity</div>
+                    <div class="subject-cost">Cost</div>
+                </div>
+
+                <div class="content">
+                    <input type="checkbox" />
+                    <div class="content-product">
+                        <img src="./assets/product/product1.jpg" alt="" />
+                        <p>
+                            Description of product fffffffffffff fffffffffffff
+                            fffffffffffffff ffffffffff ffffffffffff fffffffffff
+                            ffffffffff fffffffff ffffffff ffff fffffff fffffff
+                            ffffff fff fffffffff ffff
+                        </p>
+                    </div>
+                    <div>
+                        <span>$</span>
+                        <span class="content-price">10.50</span>
+                    </div>
+                    <div class="quantity-button">
+                        <button class="decrease">-</button>
+                        <input class="quantity" value="1" />
+                        <button class="increase">+</button>
+                    </div>
+                    <div>
+                        <span>$</span>
+                        <span class="content-cost">-</span>
+                    </div>
+                </div>
+
+                <div class="content">
+                    <input type="checkbox" />
+                    <div class="content-product">
+                        <img src="./assets/product/product1.jpg" alt="" />
+                        <p>
+                            Description of product fffffffffffff fffffffffffff
+                            fffffffffffffff ffffffffff ffffffffffff fffffffffff
+                            ffffffffff fffffffff ffffffff ffff fffffff fffffff
+                            ffffff fff fffffffff ffff
+                        </p>
+                    </div>
+                    <div>
+                        <span>$</span>
+                        <span class="content-price">10.50</span>
+                    </div>
+                    <div class="quantity-button">
+                        <button class="decrease">-</button>
+                        <input class="quantity" value="1" />
+                        <button class="increase">+</button>
+                    </div>
+                    <div>
+                        <span>$</span>
+                        <span class="content-cost">-</span>
+                    </div>
+                </div>
+                <div class="total">
+                    <span>Total: $</span>
+                    <span id="total">-</span>
+                </div>
+
+                <div>
+                    <button class="button">Pay Now</button>
+                </div>
+            </div>
+
+            <div class="footer">© 2024 iBuy. All Rights Reserved .</div>
+        </div>
+    </body>
+
+    <script src="./costCalculation.js"></script>
+</html>
