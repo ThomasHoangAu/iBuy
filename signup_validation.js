@@ -5,6 +5,13 @@ document
         document.getElementById('passwordError').textContent = '';
         document.getElementById('confirmPasswordError').textContent = '';
         document.getElementById('emailError').textContent = '';
+        document.getElementById('firstNameError').textContent = '';
+        document.getElementById('lastNameError').textContent = '';
+        document.getElementById('phoneError').textContent = '';
+        document.getElementById('addressError').textContent = '';
+        document.getElementById('cityError').textContent = '';
+        document.getElementById('stateError').textContent = '';
+        document.getElementById('postcodeError').textContent = '';
 
         // Fetch input values
         let passwordInput = document.getElementById('password');
@@ -17,6 +24,16 @@ document
         let firstnameInputValue = firstnameInput.value.trim();
         let lastnameInput = document.getElementById('last-name');
         let lastnameInputValue = lastnameInput.value.trim();
+        let phoneInput = document.getElementById('phone');
+        let phoneInputValue = phoneInput.value.trim();
+        let addressInput = document.getElementById('address');
+        let addressInputValue = addressInput.value.trim();
+        let cityInput = document.getElementById('city');
+        let cityInputValue = cityInput.value.trim();
+        let stateInput = document.getElementById('state');
+        let stateInputValue = stateInput.value.trim();
+        let postcodeInput = document.getElementById('postcode');
+        let postcodeInputValue = postcodeInput.value.trim();
 
         // Validate email
         if (emailInputValue === '') {
@@ -74,6 +91,57 @@ document
                 'Please enter your last name.';
             event.preventDefault(); // Prevent form submission
             lastnameInput.focus();
+            return false;
+        }
+
+        // Validate phone
+        if (phoneInputValue === '') {
+            document.getElementById('phoneError').textContent =
+                'Please enter your phone number.';
+            event.preventDefault(); // Prevent form submission
+            phoneInput.focus();
+            return false;
+        } else if (isNaN(phoneInputValue)) {
+            document.getElementById('phoneError').textContent =
+                'Phone number mus be a number.';
+            event.preventDefault(); // Prevent form submission
+            phoneInput.focus();
+            return false;
+        }
+
+        // Validate address
+        if (addressInputValue === '') {
+            document.getElementById('addressError').textContent =
+                'Please enter your address.';
+            event.preventDefault(); // Prevent form submission
+            addressInput.focus();
+            return false;
+        }
+
+        // Validate city
+        if (cityInputValue === '') {
+            document.getElementById('cityError').textContent =
+                'Please enter your city.';
+            event.preventDefault(); // Prevent form submission
+            cityInput.focus();
+            return false;
+        }
+
+        // Validate state
+        if (stateInputValue === '') {
+            document.getElementById('stateError').textContent =
+                'Please enter your state.';
+            event.preventDefault(); // Prevent form submission
+            stateInput.focus();
+            return false;
+        }
+
+        // Validate postcode
+        if (postcodeInputValue === '') {
+            document.getElementById('postcodeError').textContent =
+                'Please enter your postcode.';
+            event.preventDefault(); // Prevent form submission
+            postcodeInput.focus();
             return false;
         }
     });

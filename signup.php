@@ -19,7 +19,7 @@
             <form id="sign-form" class="sign" action="signup_authentication.php" method="post">
                 <div class="title">Sign Up</div>
                 <div>
-                    <input id="email" type="text" placeholder="* Email" name="email" />
+                    <input id="email" type="text" placeholder="Email" name="email" />
                     <div class="error-message">
                         <span id="emailError"></span>
                     </div>
@@ -29,7 +29,7 @@
                     <input
                         type="password"
                         id="password"
-                        placeholder="* Password"
+                        placeholder="Password"
                         name="password"
                     />
                     <div class="error-message">
@@ -41,7 +41,7 @@
                     <input
                         type="password"
                         id="confirm-password"
-                        placeholder="* Confirm Password"
+                        placeholder="Confirm Password"
                         name="confirm-password"
                     />
                     <div class="error-message">
@@ -53,7 +53,7 @@
                     <input
                         type="text"
                         id="first-name"
-                        placeholder="* First Name"
+                        placeholder="First Name"
                         name="first_name"
                     />
                     <div class="error-message">
@@ -65,7 +65,7 @@
                     <input
                         type="text"
                         id="last-name"
-                        placeholder="* Last Name"
+                        placeholder="Last Name"
                         name="last_name"
                     />
                     <div class="error-message">
@@ -80,6 +80,9 @@
                         placeholder="Phone"
                         name="phone"
                     />
+                    <div class="error-message">
+                        <span id="phoneError"></span>
+                    </div>
                 </div>
                 
                 <div>
@@ -89,6 +92,9 @@
                         placeholder="Address"
                         name="address"
                     />
+                    <div class="error-message">
+                        <span id="addressError"></span>
+                    </div>
                 </div>
                 
                 <div>
@@ -98,6 +104,9 @@
                         placeholder="City"
                         name="city"
                     />
+                    <div class="error-message">
+                        <span id="cityError"></span>
+                    </div>
                 </div>
                 
                 <div>
@@ -107,6 +116,9 @@
                         placeholder="State"
                         name="state"
                     />
+                    <div class="error-message">
+                        <span id="stateError"></span>
+                    </div>
                 </div>
                 
                 <div>
@@ -116,22 +128,14 @@
                         placeholder="Post code"
                         name="postcode"
                     />
+                    <div class="error-message">
+                        <span id="postcodeError"></span>
+                    </div>
                 </div>
 
                 <div>
                     <button type="submit" class="button">Sign Up</button>
                 </div>
-
-                <?php
-                    // Check if error parameter is present in the URL
-                    if (isset($_GET['error']) && $_GET['error'] == 2) {
-                        echo "
-                                <div style='padding-bottom: 20px;'>
-                                    <p style='color: red;'>Email is existed. Please try again!</p>
-                                </div>
-                            ";
-                    }
-                ?>
             </form>
             <div class="footer">© 2024 iBuy. All Rights Reserved .</div>
         </div>

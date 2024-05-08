@@ -3,11 +3,11 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" type="text/css" href="styles.css" />
+        <link rel="stylesheet" type="text/css" href="styles.css?version=50" />
         <title>iBuy</title>
     </head>
     <body>
-        <header>
+    <header>
             <div class="container">
                 <a href="index.php">
                     <img class="logo" src="./assets/logo.png" alt="" />
@@ -29,7 +29,7 @@
                         </div>
                     </button>
                 </form>
-                
+
                 <?php
                     session_start();
                     require_once('conn_iBuyDb.php');
@@ -112,70 +112,95 @@
         </header>
 
         <div class="container">
-            <div class="product-detail">
+            <div class="cart">
+                <div class="title">Cart</div>
+                <div class="subject">
+                    <input type="checkbox" style="opacity:0" />
+                    <div class="subject-product">Product</div>
+                    <div class="subject-price">Unit Price</div>
+                    <div class="subject-quantity">Quantity</div>
+                    <div class="subject-cost">Cost</div>
+                </div>
+
                 <?php
-                    // Check if product ID is provided in the URL
-                    if(isset($_GET['id'])) {
-                        // Sanitize the input to prevent SQL injection
-                        $product_id = mysqli_real_escape_string($link, $_GET['id']);
+                    if(isset($_SESSION['customer_id'])) {
+                        $lastOrderQuery = "SELECT order_id FROM orders WHERE (customer_id = '$_SESSION[customer_id]' AND is_paid = 0) ORDER BY order_id DESC LIMIT 1";
+                        $lastOrderResult = mysqli_query($link, $lastOrderQuery);
+                        $lastOrderRow = $lastOrderResult->fetch_row();
+                        if($lastOrderRow != null) {
+                            $lastOrderId = $lastOrderRow[0];
+                        }else {
+                            $lastOrderId = null;
+                        }
+                        $cartQuery = "SELECT * FROM order_details WHERE order_id = '$lastOrderId'";
+                        $cartResult = mysqli_query($link, $cartQuery);
 
-                        // Fetch product details from the database
-                        $sql = "SELECT * FROM products WHERE product_id = '$product_id'";
-                    
-                        // Execute query
-                        $result = mysqli_query($link, $sql);
+                        while($cartRow = mysqli_fetch_assoc($cartResult)) {
+                            $quantity = $cartRow['quantity'];
 
-                        if ($result->num_rows > 0) {
-                            $row = $result->fetch_assoc();
-                            
-                            // Display product details
+                            $productQuery = "SELECT product_image, description, price, product_id FROM products WHERE (product_id = '$cartRow[product_id]')";
+                            $productResult = mysqli_query($link, $productQuery);
+                            $productRow = $productResult->fetch_row();
+
                             echo "
-                                    <div class='product-picture'>
-                                        <img src='./assets/product/$row[product_image]' />
+                                    <div class='content'>
+                                        <form action='deleteCartItem.php?order_detail_id=$cartRow[order_detail_id]' method='POST'>
+                                            <input name='deleteButton' class='deleteButton' type='submit' value='X' />
+                                        </form>
+                                        <div class='content-product'>
+                                            <img src='./assets/product/$productRow[0]'/>
+                                            <p>
+                                                $productRow[1]
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <span>$</span>
+                                            <span class='content-price'>$productRow[2]</span>
+                                        </div>
+                                        <form action='changeQuantity.php?order_detail_id=$cartRow[order_detail_id]' class='quantity-button' method='POST'>
+                                            <button type='submit' class='decrease'>-</button>
+                                            <input class='quantity' name='quantity' value='$cartRow[quantity]' />
+                                            <button type='submit' class='increase'>+</button>
+                                        </form>
+                                        <div>
+                                            <span>$</span>
+                                            <span class='content-cost'>-</span>
+                                        </div>
                                     </div>
-
-                                    <form class='product-action' action='addToCart.php' method='POST'>
-                                        <div class='product-description'>
-                                            $row[description]
-                                        </div>
-                                        <div class='product-price'>$ $row[price]</div>
-                                        <div class='product-quantity'>
-                                            <div>Quantity</div>
-                                            <div class='quantity-button'>
-                                                <button type='button' onclick='change(-1)' class='decrease'>
-                                                    -
-                                                </button>
-                                                <input id='quantity' value='1' name='quantity'/>
-                                                <button type='button' onclick='change(1)' class='increase'>
-                                                    +
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class='buy'>
-                                            <button class='button' type='submit' >Add To Cart</button>
-                                            <button class='button'>
-                                                <a href='index.php'>Shopping</a>
-                                            </button>
-                                        </div>
-                                    </form>
-                                ";
-                            $_SESSION['pro_id'] = $product_id;
-                            $_SESSION['pro_price'] = $row['price'];
-
-                        } else {
-                            echo "Product not found";
+                            ";
+                            
                         }
                     }else {
-                        echo "Invalid product ID";
+                        echo "0 results";
                     }
-
                     mysqli_close($link);
                 ?>
+                
+                <form action="paymentDetail.php" method="POST">
+                    <div class="total">
+                        <span style="font-size: 16px">GST Included:&nbsp;$&nbsp;</span>
+                        <span style="font-size: 16px" id="gst">-</span>
+                        <input type="hidden" id="gstInput" name="gst" />
+                    </div>
+                    <div class="total">
+                        <span>Total: $&nbsp;</span>
+                        <span id="total">-</span>
+                        <input type="hidden" id="totalInput" name="total" />
+
+                    </div>
+
+                    <div class='buy'>
+                        <button class='button' type="submit">Pay now</button>
+                        <button class='button'>
+                            <a href='index.php'>Shopping</a>
+                        </button>
+                    </div>
+                </form>
             </div>
 
             <div class="footer">© 2024 iBuy. All Rights Reserved .</div>
         </div>
     </body>
 
-    <script src="./quantity.js"></script>
+    <script src="./costCalculation.js"></script>
 </html>

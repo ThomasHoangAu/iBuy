@@ -1,19 +1,3 @@
-<?php
-    session_start();
-    if(isset($_SESSION['first_name']) and isset($_SESSION['last_name'])) {
-        $userName = ucfirst($_SESSION['first_name']).' '.ucfirst($_SESSION['last_name']);
-    }
-
-    require_once('conn_iBuyDb.php');
-
-    // SQL query to fetch products
-    $sql = "SELECT * FROM products";
-
-    // Execute query
-    $result = mysqli_query($link, $sql);
-    
-?>
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -25,13 +9,13 @@
     <body>
         <header>
             <div class="container">
-                <a href="index.html">
+                <a href="index.php">
                     <img class="logo" src="./assets/logo.png" alt="" />
                 </a>
-                <div class="search">
-                    <input type="text" />
-                    <div class="search-icon">
-                        <a href="#">
+                <form class="search" action="search.php" method="POST">
+                    <input type="text" name="search" />
+                    <button type="submit" class="search-icon">
+                        <div>
                             <svg
                                 fill="white"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -42,12 +26,16 @@
                                     d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
                                 />
                             </svg>
-                        </a>
-                    </div>
-                </div>
+                        </div>
+                    </button>
+                </form>
 
                 <?php
-                    if(isset($_SESSION['loggedin']) and $_SESSION['loggedin'] == true) {
+                    session_start();
+                    require_once('conn_iBuyDb.php');
+
+                    if(isset($_SESSION['loggedin'])) {
+                        $userName = ucfirst($_SESSION['first_name']).' '.ucfirst($_SESSION['last_name']);
                         echo "
                                 <div class='loggedin'>
                                     <div class='sign-up'>
@@ -63,7 +51,7 @@
                                     </div>
                                     <div class='separate'></div>
                                     <div class='cart-icon'>
-                                        <a href='cart.html'>
+                                        <a href='cart.php'>
                                             <svg
                                                 fill='white'
                                                 xmlns='http://www.w3.org/2000/svg'
@@ -75,12 +63,37 @@
                                                 />
                                             </svg>
                                         </a>
+                                        <div id='itemNotification'></div>
                                     </div>
                                 </div>
-                                
-                        
                             ";
-                        
+
+                            // Display cart notification
+                            $lastOrderQuery = "SELECT order_id, is_paid FROM orders WHERE (customer_id = '$_SESSION[customer_id]' AND is_paid = 0) ORDER BY order_id DESC LIMIT 1";
+                            $lastOrderResult = mysqli_query($link, $lastOrderQuery);
+                            $lastOrderRow = $lastOrderResult->fetch_row();
+                            if($lastOrderRow != null) {
+                                $lastOrderId = $lastOrderRow[0];
+                            }else{
+                                $lastOrderId = null;
+                            }
+                            $cartQuery = "SELECT COUNT(order_detail_id) FROM order_details WHERE order_id = '$lastOrderId'";
+                            $cartResult = mysqli_query($link, $cartQuery);
+                            $cartRow = $cartResult->fetch_row();
+                            $numOfItems = $cartRow[0];
+                    
+                            echo "
+                                    <script>
+                                        const numOfItems = $numOfItems;
+                                        let notification = document.getElementById('itemNotification');
+                                        notification.style.display = 'block';
+                                        if (numOfItems > 0) {
+                                            notification.textContent = numOfItems;
+                                        } else {
+                                            notification.style.display = 'none';
+                                        }
+                                    </script>
+                                ";
                     } else {
                             echo "
                                     <div class='not-loggedin'>
@@ -92,8 +105,6 @@
                                             <a href='login.php'><p>Log In</p></a>
                                         </div>
                                     </div>
-                                    
-                                
                                 ";
                             }
                 ?>
@@ -103,15 +114,15 @@
         <div class="container">
             <div class="banner">
                 <div class="mySlides fade">
-                    <img src="./assets/banner/banner1.jpg" style="width: 80%" />
+                    <img src="./assets/banner/banner1.jpg" style="width:80%" />
                 </div>
 
                 <div class="mySlides fade">
-                    <img src="./assets/banner/banner2.jpg" style="width: 80%" />
+                    <img src="./assets/banner/banner2.jpg" style="width:80%" />
                 </div>
 
                 <div class="mySlides fade">
-                    <img src="./assets/banner/banner3.jpg" style="width: 80%" />
+                    <img src="./assets/banner/banner3.jpg" style="width:80%" />
                 </div>
 
                 <!-- Next and previous buttons -->
@@ -129,9 +140,13 @@
 
             <div class="title">Everyday Product</div>
             
-            
             <div class="product-list">
                 <?php
+                    // SQL query to fetch products
+                    $productListQuery = "SELECT * FROM products";
+                    // Execute query
+                    $result = mysqli_query($link, $productListQuery);
+
                     // Check if any rows are returned
                     if(mysqli_num_rows($result) > 0) {
                         // Fetch data and display it in a table
@@ -159,6 +174,7 @@
         </div>
     </body>
 
-    <script src="banner.js"></script>
+    <script src="./banner.js"></script>
+   
 </html>
 

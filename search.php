@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" type="text/css" href="styles.css" />
+        <link rel="stylesheet" type="text/css" href="styles.css?version=51" />
         <title>iBuy</title>
     </head>
     <body>
@@ -29,7 +29,7 @@
                         </div>
                     </button>
                 </form>
-                
+
                 <?php
                     session_start();
                     require_once('conn_iBuyDb.php');
@@ -112,63 +112,59 @@
         </header>
 
         <div class="container">
-            <div class="product-detail">
+            <div class="banner">
+                <div class="mySlides fade">
+                    <img src="./assets/banner/banner1.jpg" style="width:80%" />
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="./assets/banner/banner2.jpg" style="width:80%" />
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="./assets/banner/banner3.jpg" style="width:80%" />
+                </div>
+
+                <!-- Next and previous buttons -->
+                <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                <a class="next" onclick="plusSlides(1)">&#10095;</a>
+            </div>
+            <br />
+
+            <!-- The dots/circles -->
+            <div style="text-align: center">
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
+            </div>
+
+            <div class="title">Search Result</div>
+            
+            <div class="product-list">
                 <?php
-                    // Check if product ID is provided in the URL
-                    if(isset($_GET['id'])) {
-                        // Sanitize the input to prevent SQL injection
-                        $product_id = mysqli_real_escape_string($link, $_GET['id']);
-
-                        // Fetch product details from the database
-                        $sql = "SELECT * FROM products WHERE product_id = '$product_id'";
-                    
-                        // Execute query
-                        $result = mysqli_query($link, $sql);
-
-                        if ($result->num_rows > 0) {
-                            $row = $result->fetch_assoc();
-                            
-                            // Display product details
+                    $searchInput = $_POST['search'];
+                    $searchQuery = "SELECT * FROM products WHERE name LIKE '%$searchInput%'";
+                    $searchResult = mysqli_query($link, $searchQuery);
+                
+                    // Check if any rows are returned
+                    if(mysqli_num_rows($searchResult) > 0) {
+                        // Fetch data and display it in a table
+                        while($row = mysqli_fetch_assoc($searchResult)) {
                             echo "
-                                    <div class='product-picture'>
-                                        <img src='./assets/product/$row[product_image]' />
-                                    </div>
-
-                                    <form class='product-action' action='addToCart.php' method='POST'>
-                                        <div class='product-description'>
-                                            $row[description]
-                                        </div>
-                                        <div class='product-price'>$ $row[price]</div>
-                                        <div class='product-quantity'>
-                                            <div>Quantity</div>
-                                            <div class='quantity-button'>
-                                                <button type='button' onclick='change(-1)' class='decrease'>
-                                                    -
-                                                </button>
-                                                <input id='quantity' value='1' name='quantity'/>
-                                                <button type='button' onclick='change(1)' class='increase'>
-                                                    +
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class='buy'>
-                                            <button class='button' type='submit' >Add To Cart</button>
-                                            <button class='button'>
-                                                <a href='index.php'>Shopping</a>
-                                            </button>
-                                        </div>
-                                    </form>
-                                ";
-                            $_SESSION['pro_id'] = $product_id;
-                            $_SESSION['pro_price'] = $row['price'];
-
-                        } else {
-                            echo "Product not found";
+                                <div>
+                                    <a class='product-item' href='product.php?id=$row[product_id]'>
+                                        <img src='./assets/product/$row[product_image]'/>
+                                    </a>
+                                    <p class='discription'>$row[name]</p>
+                                    <p class='symbol'>$<span class='price'>$row[price]</span></p>
+                                </div>
+                            
+                            ";
                         }
                     }else {
-                        echo "Invalid product ID";
+                        echo "0 results";
                     }
-
+                
                     mysqli_close($link);
                 ?>
             </div>
@@ -177,5 +173,7 @@
         </div>
     </body>
 
-    <script src="./quantity.js"></script>
+    <script src="./banner.js"></script>
+   
 </html>
+

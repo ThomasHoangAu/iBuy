@@ -16,8 +16,10 @@
     $result = mysqli_query($link, $emailQuery);
     
     if(mysqli_num_rows($result) == 1) {
-        header("Location: signup.php?error=2");
-        exit;
+        echo "<script type='text/javascript'>
+                alert('Email is existed. Please try again!');
+                window.location.href = 'signup.php';
+            </script>";
     }
 
     $query = "INSERT INTO customers (first_name, last_name, email, pass_word, address, city, state, postal_code, phone) 

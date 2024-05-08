@@ -9,7 +9,7 @@
     <body>
         <header>
             <div class="container">
-                <a href="index.html">
+                <a href="index.php">
                     <img class="logo" src="./assets/logo.png" alt="" />
                 </a>
             </div>
@@ -18,7 +18,7 @@
         <div class="container">
             <div class="cart">
                 <div class="title">Payment</div>
-                <form action="" method="post" id="process_payment" class="form">
+                <form action="displayOrder.php" method="post" id="process_payment" class="form">
                     <fieldset>
                         <legend>Shipping details:</legend>
 
@@ -120,7 +120,7 @@
 
                         <ol>
                             <li>
-                                <label for="phone">Card Type:</label>
+                                <label>Card Type:</label>
 
                                 <select name="card_type" id="card_type">
                                     <option value="Visa">Visa</option>
@@ -169,7 +169,12 @@
                             </li>
                         </ol>
 
-                        <button class="button" type="submit">Submit</button>
+                        <div class='buy'>
+                            <button class="button" type="submit">Display Order</button>
+                            <button class='button' type="button">
+                                <a href='index.php'>Shopping</a>
+                            </button>
+                        </div>
                     </fieldset>
                 </form>
             </div>

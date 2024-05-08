@@ -83,7 +83,16 @@ header .container .search input {
     width: 80%;
 }
 
-header .container .search .search-icon a {
+header .container .search .search-icon {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+}
+
+header .container .search .search-icon div {
     width: 60px;
     height: 34px;
     color: white;
@@ -91,11 +100,12 @@ header .container .search .search-icon a {
     justify-content: center;
     align-items: center;
     border-radius: 2px;
+    border: none;
     margin: 3px;
     background-color: #f53d2d;
 }
 
-header .container .search .search-icon a svg {
+header .container .search .search-icon div svg {
     width: 20px;
 }
 
@@ -128,6 +138,21 @@ header .container .separate {
 
 header .container .cart-icon {
     width: 25px;
+    position: relative;
+}
+
+#itemNotification {
+    min-width: 25px;
+    padding: 2px;
+    height: 20px;
+    background-color: #e2dbda;
+    color: red;
+    font-size: 14px;
+    border: 1px solid #525252;
+    border-radius: 10px;
+    position: absolute;
+    top: -70%;
+    left: 90%;
 }
 
 /* banner */
@@ -300,6 +325,7 @@ header .container .cart-icon {
 
 .quantity-button {
     display: flex;
+    justify-content: center;
     margin-left: 10px;
     margin-right: 10px;
 }
@@ -328,6 +354,8 @@ header .container .cart-icon {
 
 .buy {
     margin-top: 40px;
+    display: flex;
+    justify-content: space-around;
 }
 
 .buy button {
@@ -335,17 +363,7 @@ header .container .cart-icon {
     height: 40px;
     border: 1px solid #f53d2d;
     border-radius: 2px;
-}
-
-.add-to-cart {
-    background-color: #ffebe1;
-    color: #f53d2d;
-}
-
-.buy-now {
-    background-color: #f53d2d;
     color: white;
-    margin-left: 30px;
 }
 
 /*signup, login*/
@@ -443,6 +461,12 @@ header .container .cart-icon {
     outline: none;
 }
 
+.deleteButton {
+    width: 25px;
+    height: 25px;
+    color: red;
+}
+
 .total {
     display: flex;
     justify-content: end;
@@ -482,6 +506,12 @@ header .container .cart-icon {
     outline: none;
     width: 70%;
     line-height: 30px;
+}
+
+.display_total {
+    background-color: #e2dbda;
+    height: 30px;
+    width: 70%;
 }
 
 .form ol li select {
