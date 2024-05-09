@@ -2,16 +2,7 @@
         session_start();
         require_once('conn_iBuyDb.php');
 
-        if(isset($_POST['gst'], $_POST['total'])) {
-            $gst = $_POST['gst'];
-            $total = $_POST['total'];
-        }else if(isset($_SESSION['total'], $_SESSION['gst'])) {
-            $gst = $_SESSION['gst'];
-            $total = $_SESSION['total'];
-        }else {
-            $gst = '';
-            $total = '';
-        }
+        
 
         if(!isset($_SESSION['pay_fname'], $_SESSION['pay_lname'], $_SESSION['pay_email'], $_SESSION['pay_address'], 
         $_SESSION['pay_city'], $_SESSION['pay_state'], $_SESSION['pay_pcode'], $_SESSION['pay_phone'], $_SESSION['card_type'], $_SESSION['card_no'], $_SESSION['code'], $_SESSION['exp_date'])) {
@@ -27,6 +18,26 @@
             $_SESSION['card_no'] = '';
             $_SESSION['code'] = '';
             $_SESSION['exp_date'] = '';
+        }
+        if($_SESSION['card_type'] == '') {
+            $_SESSION['card_type'] = 'Visa';
+        }
+
+        if(isset($_POST['gst'], $_POST['total'])) {
+            $_SESSION['gst'] = $_POST['gst'];
+            $_SESSION['total'] = $_POST['total'];
+            $gst = $_SESSION['gst'];
+            $total = $_SESSION['total'];
+        }else if(!isset($_SESSION['total'], $_SESSION['gst'])) {
+            $gst = '';
+            $total = '';
+            echo "<script type='text/javascript'>
+                        alert('You did not pay. Please back to cart to pay!'); 
+                        window.location.href = 'cart.php';
+                    </script>";
+        }else {
+            $gst = $_SESSION['total'];
+            $total = $_SESSION['gst'];
         }
         
         $json = json_encode($_SESSION['card_type']);

@@ -11,7 +11,7 @@
             $lastOrderId = null;
         }
 
-        //check if cart is empty
+        //check if cart is not empty
         $cartQuery = "SELECT COUNT(order_detail_id) FROM order_details WHERE order_id = '$lastOrderId'";
         $cartResult = mysqli_query($link, $cartQuery);
         $cartRow = $cartResult->fetch_row();

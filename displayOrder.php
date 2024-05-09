@@ -13,8 +13,8 @@
             $_SESSION['pay_state'] = $pay_state = $_POST['pay_state'];
             $_SESSION['pay_pcode'] = $pay_pcode = $_POST['pay_pcode'];
             $_SESSION['pay_phone'] = $pay_phone = $_POST['pay_phone'];
-            $_SESSION['total'] = $total = $_POST['total'];
-            $_SESSION['gst'] = $gst = $_POST['gst'];
+            $total = $_POST['total'];
+            $gst = $_POST['gst'];
             $_SESSION['card_type'] = $card_type = $_POST['card_type'];
             $_SESSION['card_no'] = $card_no = $_POST['card_no'];
             $_SESSION['code'] = $code = $_POST['code'];
@@ -28,8 +28,8 @@
             $_SESSION['pay_state'] = $pay_state = '';
             $_SESSION['pay_pcode'] = $pay_pcode = '';
             $_SESSION['pay_phone'] = $pay_phone = '';
-            $_SESSION['total'] = $total = '';
-            $_SESSION['gst'] = $gst = '';
+            $total = '';
+            $gst = '';
             $_SESSION['card_type'] = $card_type = '';
             $_SESSION['card_no'] = $card_no = '';
             $_SESSION['code'] = $code = '';

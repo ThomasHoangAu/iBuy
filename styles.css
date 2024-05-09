@@ -366,6 +366,14 @@ header .container .cart-icon {
     color: white;
 }
 
+.buy button a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
 /*signup, login*/
 .sign {
     width: 400px;
