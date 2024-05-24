@@ -106,18 +106,11 @@
                             ";
 
                             // Display cart notification
-                            $lastOrderQuery = "SELECT order_id, is_paid FROM orders WHERE (customer_id = '$_SESSION[customer_id]' AND is_paid = 0) ORDER BY order_id DESC LIMIT 1";
-                            $lastOrderResult = mysqli_query($link, $lastOrderQuery);
-                            $lastOrderRow = $lastOrderResult->fetch_row();
-                            if($lastOrderRow != null) {
-                                $lastOrderId = $lastOrderRow[0];
-                            }else{
-                                $lastOrderId = null;
+                            if(isset($_SESSION['counter']) && $_SESSION['counter'] > 0) {
+                                $numOfItems = $_SESSION['counter'];
+                            }else {
+                                $numOfItems = 0;
                             }
-                            $cartQuery = "SELECT COUNT(order_detail_id) FROM order_details WHERE order_id = '$lastOrderId'";
-                            $cartResult = mysqli_query($link, $cartQuery);
-                            $cartRow = $cartResult->fetch_row();
-                            $numOfItems = $cartRow[0];
                     
                             echo "
                                     <script>
@@ -262,16 +255,16 @@
                         <ol>
                             <li>
                                 <label>Total:</label>
-                                <div class='display_total'>
-                                    <span>$</span>
+                                <div class='display_total' style="display: flex;">
+                                    <span style="height:30px; line-height:30px;">$</span>
                                     <input disabled type='text' name='total' id='total' value='<?php echo $total; ?>' />
                                 </div>
                             </li>
 
                             <li>
                                 <label>GST included:</label>
-                                <div class='display_total'>
-                                    <span>$</span>
+                                <div class='display_total' style="display: flex;">
+                                    <span style="height:30px; line-height:30px;">$</span>
                                     <input disabled type='text' name='gst' id='total' value='<?php echo $gst; ?>' />
                                 </div>
                             </li>

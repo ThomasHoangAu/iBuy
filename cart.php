@@ -29,11 +29,13 @@
                         </div>
                     </button>
                 </form>
-
+                
                 <?php
-                    session_start();
+                    include './model/Cart.php';
+                    include './model/Product.php';
                     require_once('conn_iBuyDb.php');
 
+                    session_start();
                     if(isset($_SESSION['loggedin'])) {
                         $userName = ucfirst($_SESSION['first_name']).' '.ucfirst($_SESSION['last_name']);
                         echo "
@@ -69,18 +71,11 @@
                             ";
 
                             // Display cart notification
-                            $lastOrderQuery = "SELECT order_id, is_paid FROM orders WHERE (customer_id = '$_SESSION[customer_id]' AND is_paid = 0) ORDER BY order_id DESC LIMIT 1";
-                            $lastOrderResult = mysqli_query($link, $lastOrderQuery);
-                            $lastOrderRow = $lastOrderResult->fetch_row();
-                            if($lastOrderRow != null) {
-                                $lastOrderId = $lastOrderRow[0];
-                            }else{
-                                $lastOrderId = null;
+                            if(isset($_SESSION['counter']) && $_SESSION['counter'] > 0) {
+                                $numOfItems = $_SESSION['counter'];
+                            }else {
+                                $numOfItems = 0;
                             }
-                            $cartQuery = "SELECT COUNT(order_detail_id) FROM order_details WHERE order_id = '$lastOrderId'";
-                            $cartResult = mysqli_query($link, $cartQuery);
-                            $cartRow = $cartResult->fetch_row();
-                            $numOfItems = $cartRow[0];
                     
                             echo "
                                     <script>
@@ -123,74 +118,76 @@
                 </div>
 
                 <?php
-                    if(isset($_SESSION['customer_id'])) {
-                        $lastOrderQuery = "SELECT order_id FROM orders WHERE (customer_id = '$_SESSION[customer_id]' AND is_paid = 0) ORDER BY order_id DESC LIMIT 1";
-                        $lastOrderResult = mysqli_query($link, $lastOrderQuery);
-                        $lastOrderRow = $lastOrderResult->fetch_row();
-                        if($lastOrderRow != null) {
-                            $lastOrderId = $lastOrderRow[0];
-                        }else {
-                            $lastOrderId = null;
-                        }
-                        $cartQuery = "SELECT * FROM order_details WHERE order_id = '$lastOrderId'";
-                        $cartResult = mysqli_query($link, $cartQuery);
-
-                        while($cartRow = mysqli_fetch_assoc($cartResult)) {
-                            $quantity = $cartRow['quantity'];
-
-                            $productQuery = "SELECT product_image, description, price, product_id FROM products WHERE (product_id = '$cartRow[product_id]')";
-                            $productResult = mysqli_query($link, $productQuery);
-                            $productRow = $productResult->fetch_row();
+                    $cart = new Cart();
+                    if(isset($_SESSION['counter']) && $_SESSION['counter'] >= 0) {
+                        $cart = unserialize($_SESSION['cart']);
+                        $products = $cart->products;
+                        $key = array_keys($products);
+                        for($i = 0; $i < $cart->get_depth(); $i++) {
+                            $product = $cart->get_product($key[$i]);
+                            $product_id = $product->get_product_id();
+                            $product_des = $product->get_product_des();
+                            $qty = $product->get_qty();
+                            $unit_price = $product->get_unit_price();
+                            $product_img= $product->get_product_img();
 
                             echo "
                                     <div class='content'>
-                                        <form action='deleteCartItem.php?order_detail_id=$cartRow[order_detail_id]' method='POST'>
+                                        <form action='deleteCartItem.php?order_detail_id=$key[$i]' method='POST'>
                                             <input name='deleteButton' class='deleteButton' type='submit' value='X' />
                                         </form>
                                         <div class='content-product'>
-                                            <img src='./assets/product/$productRow[0]'/>
+                                            <img src='./assets/product/$product_img'/>
                                             <p>
-                                                $productRow[1]
+                                                $product_des
                                             </p>
                                         </div>
-                                        <div>
+                                        <div style='display: flex; justify-content:center'>
                                             <span>$</span>
-                                            <span class='content-price'>$productRow[2]</span>
+                                            <span class='content-price'>$unit_price</span>
                                         </div>
-                                        <form action='changeQuantity.php?order_detail_id=$cartRow[order_detail_id]' class='quantity-button' method='POST'>
+                                        <form action='changeQuantity.php?order_detail_id=$key[$i]' class='quantity-button' method='POST'>
                                             <button type='submit' class='decrease'>-</button>
-                                            <input class='quantity' name='quantity' value='$cartRow[quantity]' />
+                                            <input class='quantity' name='quantity' value='$qty' />
                                             <button type='submit' class='increase'>+</button>
                                         </form>
-                                        <div>
+                                        <div style='display:flex; justify-content:center'>
                                             <span>$</span>
                                             <span class='content-cost'>-</span>
                                         </div>
                                     </div>
                             ";
-                            
                         }
                     }else {
                         echo "0 results";
                     }
                     mysqli_close($link);
+                    
                 ?>
                 
                 <form action="paymentDetail.php" method="POST">
                     <div class="total">
-                        <span style="font-size: 16px">GST Included:&nbsp;$&nbsp;</span>
+                        <span style="font-size: 16px">GST Included: $</span>
                         <span style="font-size: 16px" id="gst">-</span>
                         <input type="hidden" id="gstInput" name="gst" />
                     </div>
                     <div class="total">
-                        <span>Total: $&nbsp;</span>
+                        <span>Total: $</span>
                         <span id="total">-</span>
                         <input type="hidden" id="totalInput" name="total" />
-
                     </div>
 
                     <div class='buy'>
-                        <button class='button' type="submit">Pay now</button>
+                        <button class='button' type="submit">Pay by Card</button>
+                        <div class="paypal-button-container" style="text-align: center">
+                            <div id="paypal-button-container"></div>
+                            <div class="overlay">Pay by Paypal</div>
+                        </div>
+                        <script
+                            src="https://www.paypal.com/sdk/js?client-id=AZj0-t_IitIxqxVv9ns7J2Ut7LGrg2NxCT4xpXad8FRHRGFR46DZFiIyzUCXjgITuC1JaRSlSxF-amMp&enable-funding=venmo&currency=AUD&disable-funding=card"
+                            data-sdk-integration-source="button-factory"
+                        ></script>
+
                         <button class='button'>
                             <a href='index.php'>Shopping</a>
                         </button>
@@ -201,6 +198,6 @@
             <div class="footer">© 2024 iBuy. All Rights Reserved .</div>
         </div>
     </body>
-
+                    
     <script src="./costCalculation.js"></script>
 </html>

@@ -2,8 +2,6 @@
         session_start();
         require_once('conn_iBuyDb.php');
 
-        
-
         if(!isset($_SESSION['pay_fname'], $_SESSION['pay_lname'], $_SESSION['pay_email'], $_SESSION['pay_address'], 
         $_SESSION['pay_city'], $_SESSION['pay_state'], $_SESSION['pay_pcode'], $_SESSION['pay_phone'], $_SESSION['card_type'], $_SESSION['card_no'], $_SESSION['code'], $_SESSION['exp_date'])) {
             $_SESSION['pay_fname'] = '';
@@ -112,18 +110,11 @@
                             ";
 
                             // Display cart notification
-                            $lastOrderQuery = "SELECT order_id, is_paid FROM orders WHERE (customer_id = '$_SESSION[customer_id]' AND is_paid = 0) ORDER BY order_id DESC LIMIT 1";
-                            $lastOrderResult = mysqli_query($link, $lastOrderQuery);
-                            $lastOrderRow = $lastOrderResult->fetch_row();
-                            if($lastOrderRow != null) {
-                                $lastOrderId = $lastOrderRow[0];
-                            }else{
-                                $lastOrderId = null;
+                            if(isset($_SESSION['counter']) && $_SESSION['counter'] > 0) {
+                                $numOfItems = $_SESSION['counter'];
+                            }else {
+                                $numOfItems = 0;
                             }
-                            $cartQuery = "SELECT COUNT(order_detail_id) FROM order_details WHERE order_id = '$lastOrderId'";
-                            $cartResult = mysqli_query($link, $cartQuery);
-                            $cartRow = $cartResult->fetch_row();
-                            $numOfItems = $cartRow[0];
                     
                             echo "
                                     <script>

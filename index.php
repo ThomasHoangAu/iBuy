@@ -31,9 +31,11 @@
                 </form>
 
                 <?php
-                    session_start();
+                    include './model/Cart.php';
+                    include './model/Product.php';
                     require_once('conn_iBuyDb.php');
-
+                    
+                    session_start();
                     if(isset($_SESSION['loggedin'])) {
                         $userName = ucfirst($_SESSION['first_name']).' '.ucfirst($_SESSION['last_name']);
                         echo "
@@ -81,20 +83,45 @@
                             $cartResult = mysqli_query($link, $cartQuery);
                             $cartRow = $cartResult->fetch_row();
                             $numOfItems = $cartRow[0];
-                    
+
+                            //Set $_SESSION['counter']
+                            $_SESSION['counter'] = $numOfItems;
+
+                            //Add product to cart
+                            
+                            if($_SESSION['counter'] > 0) {
+                                $cartProductQuery = "SELECT * FROM order_details WHERE order_id = '$lastOrderId'";
+                                $cartProductResult = mysqli_query($link, $cartProductQuery);
+                                
+                                $cart = new Cart();
+                                while($row = mysqli_fetch_assoc($cartProductResult)) {
+                                    $product_id = $row['product_id'];
+                                    $productQuery = "SELECT description, product_image FROM products WHERE product_id = '$product_id'";
+                                    $productQueryResult = mysqli_query($link, $productQuery);
+                                    $productRow = $productQueryResult->fetch_assoc();
+                                    $product = new Product($row['product_id'], $productRow['description'], $row['quantity'], $row['price'], $productRow['product_image']);
+                                    $cart->add_product($row['order_detail_id'], $product);
+                                }
+                                
+                                //Set $_SESSION['counter']
+                                $_SESSION['cart'] = serialize($cart);
+                            }else {
+                                $numOfItems = 0;
+                            }
+
                             echo "
-                                    <script>
-                                        const numOfItems = $numOfItems;
-                                        let notification = document.getElementById('itemNotification');
-                                        notification.style.display = 'block';
-                                        if (numOfItems > 0) {
-                                            notification.textContent = numOfItems;
-                                        } else {
-                                            notification.style.display = 'none';
-                                        }
-                                    </script>
-                                ";
-                    } else {
+                                        <script>
+                                            const numOfItems = $numOfItems;
+                                            let notification = document.getElementById('itemNotification');
+                                            notification.style.display = 'block';
+                                            if (numOfItems > 0) {
+                                                notification.textContent = numOfItems;
+                                            } else {
+                                                notification.style.display = 'none';
+                                            }
+                                        </script>
+                                    ";
+                    }else {
                             echo "
                                     <div class='not-loggedin'>
                                         <div class='sign-up'>
@@ -110,7 +137,7 @@
                 ?>
             </div>
         </header>
-
+        
         <div class="container">
             <div class="banner">
                 <div class="mySlides fade">

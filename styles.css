@@ -43,12 +43,16 @@ body {
 
 .container {
     width: 80%;
-    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 header {
     height: 80px;
     background: linear-gradient(-180deg, #f53d2d, #f63);
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
 }
 
 header .container {
@@ -486,6 +490,38 @@ header .container .cart-icon {
 .total span {
     font-size: 20px;
     color: #f53d2d;
+}
+
+.paypal-button-container {
+    display: inline-block; /* Ensure it does not stretch to full width */
+    width: 150px; /* Set your desired width */
+    position: relative;
+    height: 40px;
+}
+
+.paypal-button-container iframe {
+    max-width: 150px !important; /* Ensure the button scales within the container */
+    width: 150px !important; /* Force the iframe to take the full width of the container */
+    height: 40px !important;
+}
+
+#paypal-button-container {
+    z-index: 1; /* Ensure the button is above the overlay */
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #f63; /* Semi-transparent overlay */
+    z-index: 1000;
+    pointer-events: none; /* Allow clicks to pass through the overlay */
+    width: 150px;
+    height: 40px;
+    line-height: 40px;
+    border: 1px solid #f53d2d;
+    border-radius: 2px;
+    color: white;
 }
 
 /* Payment */

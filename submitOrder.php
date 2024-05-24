@@ -11,22 +11,20 @@
             $lastOrderId = null;
         }
 
-        //check if cart is not empty
-        $cartQuery = "SELECT COUNT(order_detail_id) FROM order_details WHERE order_id = '$lastOrderId'";
-        $cartResult = mysqli_query($link, $cartQuery);
-        $cartRow = $cartResult->fetch_row();
-        $numOfItems = $cartRow[0];
-        if($numOfItems > 0) {
-            if(!isset($_SESSION['total'], $_SESSION['gst'], $_SESSION['pay_fname'], $_SESSION['pay_lname'], $_SESSION['pay_email'], $_SESSION['pay_address'], $_SESSION['pay_city'], 
-                $_SESSION['pay_state'], $_SESSION['pay_pcode'], $_SESSION['pay_phone'], $_SESSION['card_type'], $_SESSION['card_no'], $_SESSION['code'], $_SESSION['exp_date'])) {
+        //Check if cart is not empty
+        if(isset($_SESSION['counter']) && $_SESSION['counter'] > 0) {
+            if($_SESSION['total'] == '' || $_SESSION['gst'] == '' || $_SESSION['pay_fname'] == '' || $_SESSION['pay_lname'] == '' || $_SESSION['pay_email'] == '' 
+                || $_SESSION['pay_address'] == '' || $_SESSION['pay_city'] == '' || $_SESSION['pay_state'] == '' || $_SESSION['pay_pcode'] == '' 
+                || $_SESSION['pay_phone'] == '' || $_SESSION['card_type'] == '' || $_SESSION['card_no'] == '' || $_SESSION['code'] == '' || $_SESSION['exp_date']) {
                 echo "<script type='text/javascript'>
-                    alert('You did not submit order!'); 
-                    window.location.href = 'index.php';
+                    alert('You did not pay!'); 
+                    window.location.href = 'cart.php';
                 </script>";
             }else {
-                $updateOrderQuery = "UPDATE orders SET total_amount = '$_SESSION[total]', gst = '$_SESSION[gst]', pay_fname = '$_SESSION[pay_fname]', pay_lname = '$_SESSION[pay_lname]', 
-                pay_email = '$_SESSION[pay_email]', pay_address = '$_SESSION[pay_address]', pay_city = '$_SESSION[pay_city]', pay_state = '$_SESSION[pay_state]', pay_pcode = '$_SESSION[pay_pcode]', 
-                pay_phone = '$_SESSION[pay_phone]', card_type = '$_SESSION[card_type]', card_no = '$_SESSION[card_no]', code = '$_SESSION[code]', exp_date = '$_SESSION[exp_date]', is_paid = 1 
+                $updateOrderQuery = "UPDATE orders SET total_amount = '$_SESSION[total]', gst = '$_SESSION[gst]', pay_fname = '$_SESSION[pay_fname]', 
+                pay_lname = '$_SESSION[pay_lname]', pay_email = '$_SESSION[pay_email]', pay_address = '$_SESSION[pay_address]', pay_city = '$_SESSION[pay_city]', 
+                pay_state = '$_SESSION[pay_state]', pay_pcode = '$_SESSION[pay_pcode]', pay_phone = '$_SESSION[pay_phone]', card_type = '$_SESSION[card_type]', 
+                card_no = '$_SESSION[card_no]', code = '$_SESSION[code]', exp_date = '$_SESSION[exp_date]', is_paid = 1 
                 WHERE order_id = '$lastOrderId'";
     
                 mysqli_query($link, $updateOrderQuery);

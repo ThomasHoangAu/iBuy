@@ -69,19 +69,12 @@
                             ";
 
                             // Display cart notification
-                            $lastOrderQuery = "SELECT order_id, is_paid FROM orders WHERE (customer_id = '$_SESSION[customer_id]' AND is_paid = 0) ORDER BY order_id DESC LIMIT 1";
-                            $lastOrderResult = mysqli_query($link, $lastOrderQuery);
-                            $lastOrderRow = $lastOrderResult->fetch_row();
-                            if($lastOrderRow != null) {
-                                $lastOrderId = $lastOrderRow[0];
-                            }else{
-                                $lastOrderId = null;
+                            if(isset($_SESSION['counter']) && $_SESSION['counter'] > 0) {
+                                $numOfItems = $_SESSION['counter'];
+                            }else {
+                                $numOfItems = 0;
                             }
-                            $cartQuery = "SELECT COUNT(order_detail_id) FROM order_details WHERE order_id = '$lastOrderId'";
-                            $cartResult = mysqli_query($link, $cartQuery);
-                            $cartRow = $cartResult->fetch_row();
-                            $numOfItems = $cartRow[0];
-                    
+
                             echo "
                                     <script>
                                         const numOfItems = $numOfItems;
@@ -94,7 +87,7 @@
                                         }
                                     </script>
                                 ";
-                    } else {
+                    }else {
                             echo "
                                     <div class='not-loggedin'>
                                         <div class='sign-up'>
@@ -138,7 +131,7 @@
                                         <div class='product-description'>
                                             $row[description]
                                         </div>
-                                        <div class='product-price'>$ $row[price]</div>
+                                        <div class='product-price'>$$row[price]</div>
                                         <div class='product-quantity'>
                                             <div>Quantity</div>
                                             <div class='quantity-button'>
@@ -161,6 +154,8 @@
                                 ";
                             $_SESSION['pro_id'] = $product_id;
                             $_SESSION['pro_price'] = $row['price'];
+                            $_SESSION['pro_des'] = $row['description'];
+                            $_SESSION['pro_img'] = $row['product_image'];
 
                         } else {
                             echo "Product not found";
