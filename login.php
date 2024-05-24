@@ -3,8 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" type="text/css" href="styles.css" />
-        <script src="./login_validation.js" defer></script>
+        <link rel="stylesheet" type="text/css" href="css/styles.css" />
         <title>iBuy</title>
     </head>
     <body>
@@ -20,7 +19,7 @@
             <form
                 id="sign-form"
                 class="sign"
-                action="login_authentication.php"
+                action="controller/login_authentication.php"
                 method="post"
             >
                 <div class="title">Log In</div>
@@ -68,5 +67,5 @@
             <div class="footer">© 2024 iBuy. All Rights Reserved .</div>
         </div>
     </body>
-    
+    <script src="js//login_validation.js"></script>
 </html>

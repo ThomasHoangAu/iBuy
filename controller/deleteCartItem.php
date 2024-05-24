@@ -1,7 +1,7 @@
 <?php
-    include './model/Cart.php';
-    include './model/Product.php';
-    require_once('conn_iBuyDb.php');
+    include '../model/Cart.php';
+    include '../model/Product.php';
+    require_once('../connection/conn_iBuyDb.php');
 
     session_start();
     $counter = $_SESSION['counter'];
@@ -25,6 +25,6 @@
     mysqli_query($link, $deleteProductQuery);
 
     mysqli_close($link);
-    header("Location: cart.php");
+    header("Location: ../cart.php");
     exit;
 ?>

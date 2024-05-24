@@ -3,7 +3,7 @@
     $email = $_POST['email'];
     $pass_word = $_POST['password'];
 
-    require_once('conn_iBuyDb.php');
+    require_once('../connection/conn_iBuyDb.php');
 
     $query = "SELECT customer_id, first_name, last_name, email, pass_word, phone from customers WHERE (email = '$email')";
     $result = mysqli_query($link, $query);
@@ -27,10 +27,10 @@
             $_SESSION['loggedin'] = true;
 
             //re-direct to home page
-            header("Location: index.php");
+            header("Location: ../index.php");
             exit;
     }else {
-        header("Location: login.php?error=1");
+        header("Location: ../login.php?error=1");
         exit;
     }
 ?>

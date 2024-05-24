@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" type="text/css" href="styles.css?version=51" />
+        <link rel="stylesheet" type="text/css" href="css/styles.css" />
         <title>iBuy</title>
     </head>
     <body>
@@ -33,7 +33,7 @@
                 <?php
                     include './model/Cart.php';
                     include './model/Product.php';
-                    require_once('conn_iBuyDb.php');
+                    require_once('connection/conn_iBuyDb.php');
                     
                     session_start();
                     if(isset($_SESSION['loggedin'])) {
@@ -49,7 +49,7 @@
                                     </div>
                                     <div class='separate'></div>
                                     <div class='log-in'>
-                                        <a href='logout.php'><p>Log Out</p></a>
+                                        <a href='controller/logout.php'><p>Log Out</p></a>
                                     </div>
                                     <div class='separate'></div>
                                     <div class='cart-icon'>
@@ -88,7 +88,6 @@
                             $_SESSION['counter'] = $numOfItems;
 
                             //Add product to cart
-                            
                             if($_SESSION['counter'] > 0) {
                                 $cartProductQuery = "SELECT * FROM order_details WHERE order_id = '$lastOrderId'";
                                 $cartProductResult = mysqli_query($link, $cartProductQuery);
@@ -201,7 +200,7 @@
         </div>
     </body>
 
-    <script src="./banner.js"></script>
+    <script src="js/banner.js"></script>
    
 </html>
 

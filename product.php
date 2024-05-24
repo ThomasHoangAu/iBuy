@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" type="text/css" href="styles.css" />
+        <link rel="stylesheet" type="text/css" href="css/styles.css" />
         <title>iBuy</title>
     </head>
     <body>
@@ -32,7 +32,7 @@
                 
                 <?php
                     session_start();
-                    require_once('conn_iBuyDb.php');
+                    require_once('connection/conn_iBuyDb.php');
 
                     if(isset($_SESSION['loggedin'])) {
                         $userName = ucfirst($_SESSION['first_name']).' '.ucfirst($_SESSION['last_name']);
@@ -47,7 +47,7 @@
                                     </div>
                                     <div class='separate'></div>
                                     <div class='log-in'>
-                                        <a href='logout.php'><p>Log Out</p></a>
+                                        <a href='controller/logout.php'><p>Log Out</p></a>
                                     </div>
                                     <div class='separate'></div>
                                     <div class='cart-icon'>
@@ -127,7 +127,7 @@
                                         <img src='./assets/product/$row[product_image]' />
                                     </div>
 
-                                    <form class='product-action' action='addToCart.php' method='POST'>
+                                    <form class='product-action' action='controller/addToCart.php' method='POST'>
                                         <div class='product-description'>
                                             $row[description]
                                         </div>
@@ -172,5 +172,5 @@
         </div>
     </body>
 
-    <script src="./quantity.js"></script>
+    <script src="js/quantity.js"></script>
 </html>

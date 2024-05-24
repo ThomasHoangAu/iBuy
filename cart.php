@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" type="text/css" href="styles.css?version=50" />
+        <link rel="stylesheet" type="text/css" href="css/styles.css" />
         <title>iBuy</title>
     </head>
     <body>
@@ -31,9 +31,9 @@
                 </form>
                 
                 <?php
-                    include './model/Cart.php';
-                    include './model/Product.php';
-                    require_once('conn_iBuyDb.php');
+                    include 'model/Cart.php';
+                    include 'model/Product.php';
+                    require_once('connection/conn_iBuyDb.php');
 
                     session_start();
                     if(isset($_SESSION['loggedin'])) {
@@ -49,7 +49,7 @@
                                     </div>
                                     <div class='separate'></div>
                                     <div class='log-in'>
-                                        <a href='logout.php'><p>Log Out</p></a>
+                                        <a href='controller/logout.php'><p>Log Out</p></a>
                                     </div>
                                     <div class='separate'></div>
                                     <div class='cart-icon'>
@@ -133,7 +133,7 @@
 
                             echo "
                                     <div class='content'>
-                                        <form action='deleteCartItem.php?order_detail_id=$key[$i]' method='POST'>
+                                        <form action='controller/deleteCartItem.php?order_detail_id=$key[$i]' method='POST'>
                                             <input name='deleteButton' class='deleteButton' type='submit' value='X' />
                                         </form>
                                         <div class='content-product'>
@@ -146,7 +146,7 @@
                                             <span>$</span>
                                             <span class='content-price'>$unit_price</span>
                                         </div>
-                                        <form action='changeQuantity.php?order_detail_id=$key[$i]' class='quantity-button' method='POST'>
+                                        <form action='controller/changeQuantity.php?order_detail_id=$key[$i]' class='quantity-button' method='POST'>
                                             <button type='submit' class='decrease'>-</button>
                                             <input class='quantity' name='quantity' value='$qty' />
                                             <button type='submit' class='increase'>+</button>
@@ -199,5 +199,5 @@
         </div>
     </body>
                     
-    <script src="./costCalculation.js"></script>
+    <script src="js/costCalculation.js"></script>
 </html>

@@ -1,6 +1,6 @@
 <?php
         session_start();
-        require_once('conn_iBuyDb.php');
+        require_once('connection/conn_iBuyDb.php');
 
         if(!isset($_SESSION['pay_fname'], $_SESSION['pay_lname'], $_SESSION['pay_email'], $_SESSION['pay_address'], 
         $_SESSION['pay_city'], $_SESSION['pay_state'], $_SESSION['pay_pcode'], $_SESSION['pay_phone'], $_SESSION['card_type'], $_SESSION['card_no'], $_SESSION['code'], $_SESSION['exp_date'])) {
@@ -47,7 +47,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" type="text/css" href="styles.css" />
+        <link rel="stylesheet" type="text/css" href="css/styles.css" />
         <title>iBuy</title>
     </head>
     <body>
@@ -88,7 +88,7 @@
                                     </div>
                                     <div class='separate'></div>
                                     <div class='log-in'>
-                                        <a href='logout.php'><p>Log Out</p></a>
+                                        <a href='controller/logout.php'><p>Log Out</p></a>
                                     </div>
                                     <div class='separate'></div>
                                     <div class='cart-icon'>

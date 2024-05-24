@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" type="text/css" href="styles.css" />
+        <link rel="stylesheet" type="text/css" href="css/styles.css" />
         <title>iBuy</title>
     </head>
     <body>
@@ -16,7 +16,7 @@
         </header>
 
         <div class="container">
-            <form id="sign-form" class="sign" action="signup_authentication.php" method="post">
+            <form id="sign-form" class="sign" action="controller/signup_authentication.php" method="post">
                 <div class="title">Sign Up</div>
                 <div>
                     <input id="email" type="text" placeholder="Email" name="email" />
@@ -140,5 +140,5 @@
             <div class="footer">© 2024 iBuy. All Rights Reserved .</div>
         </div>
     </body>
-    <script src="./signup_validation.js"></script>
+    <script src="js/signup_validation.js"></script>
 </html>

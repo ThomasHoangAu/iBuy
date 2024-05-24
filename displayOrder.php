@@ -1,6 +1,6 @@
 <?php
         session_start();
-        require_once('conn_iBuyDb.php');
+        require_once('connection/conn_iBuyDb.php');
 
         if(isset($_POST['pay_fname'], $_POST['pay_lname'], $_POST['pay_email'], $_POST['pay_address'], 
         $_POST['pay_city'], $_POST['pay_state'], $_POST['pay_pcode'], $_POST['pay_phone'], $_POST['total'], 
@@ -35,7 +35,6 @@
             $_SESSION['code'] = $code = '';
             $_SESSION['exp_date'] = $exp_date = '';
         }
-        
 ?>
 
 <!DOCTYPE html>
@@ -43,7 +42,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" type="text/css" href="styles.css" />
+        <link rel="stylesheet" type="text/css" href="css/styles.css" />
         <title>iBuy</title>
     </head>
     <body>
@@ -84,7 +83,7 @@
                                     </div>
                                     <div class='separate'></div>
                                     <div class='log-in'>
-                                        <a href='logout.php'><p>Log Out</p></a>
+                                        <a href='controller/logout.php'><p>Log Out</p></a>
                                     </div>
                                     <div class='separate'></div>
                                     <div class='cart-icon'>
@@ -144,7 +143,7 @@
         <div class="container">
             <div class="cart">
                 <div class="title">Display Order</div>
-                <form action="submitOrder.php" method="POST" id="process_payment" class="form">
+                <form action="controller/submitOrder.php" method="POST" id="process_payment" class="form">
                     <fieldset>
                         <legend>Shipping details:</legend>
 

@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" type="text/css" href="styles.css?version=51" />
+        <link rel="stylesheet" type="text/css" href="css/styles.css" />
         <title>iBuy</title>
     </head>
     <body>
@@ -32,7 +32,7 @@
 
                 <?php
                     session_start();
-                    require_once('conn_iBuyDb.php');
+                    require_once('connection/conn_iBuyDb.php');
 
                     if(isset($_SESSION['loggedin'])) {
                         $userName = ucfirst($_SESSION['first_name']).' '.ucfirst($_SESSION['last_name']);
@@ -47,7 +47,7 @@
                                     </div>
                                     <div class='separate'></div>
                                     <div class='log-in'>
-                                        <a href='logout.php'><p>Log Out</p></a>
+                                        <a href='controller/logout.php'><p>Log Out</p></a>
                                     </div>
                                     <div class='separate'></div>
                                     <div class='cart-icon'>
@@ -69,18 +69,11 @@
                             ";
 
                             // Display cart notification
-                            $lastOrderQuery = "SELECT order_id, is_paid FROM orders WHERE (customer_id = '$_SESSION[customer_id]' AND is_paid = 0) ORDER BY order_id DESC LIMIT 1";
-                            $lastOrderResult = mysqli_query($link, $lastOrderQuery);
-                            $lastOrderRow = $lastOrderResult->fetch_row();
-                            if($lastOrderRow != null) {
-                                $lastOrderId = $lastOrderRow[0];
-                            }else{
-                                $lastOrderId = null;
+                            if(isset($_SESSION['counter']) && $_SESSION['counter'] > 0) {
+                                $numOfItems = $_SESSION['counter'];
+                            }else {
+                                $numOfItems = 0;
                             }
-                            $cartQuery = "SELECT COUNT(order_detail_id) FROM order_details WHERE order_id = '$lastOrderId'";
-                            $cartResult = mysqli_query($link, $cartQuery);
-                            $cartRow = $cartResult->fetch_row();
-                            $numOfItems = $cartRow[0];
                     
                             echo "
                                     <script>
@@ -173,7 +166,7 @@
         </div>
     </body>
 
-    <script src="./banner.js"></script>
+    <script src="js/banner.js"></script>
    
 </html>
 
