@@ -29,6 +29,9 @@
     
                 mysqli_query($link, $updateOrderQuery);
                 mysqli_close($link);
+
+                unset($_SESSION['counter']);
+		        unset($_SESSION['cart']);
     
                 echo "<script type='text/javascript'>
                         alert('Order is submited successfully!'); 
