@@ -10,7 +10,7 @@
     <body>
         <header>
             <div class="container">
-                <a class="logo-mobile" href="index.php">
+                <a class="logo-mobile" href="index.html">
                     <img class="logo" src="./assets/logo.png" alt="" />
                 </a>
                 <form class="search search-mobile" action="search.php" method="POST">
