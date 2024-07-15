@@ -22,7 +22,7 @@ for (let i = 0; i < numberOfItems; i++) {
 totalPriceCal();
 gstCal();
 
-// change quantity of an item
+// Change quantity of an item
 function change(m, n) {
     let quantityValue = parseInt(quantity[m].value);
     quantityValue += n;
@@ -33,7 +33,7 @@ function change(m, n) {
     sum(m);
 }
 
-// calculate sumary price of an item
+// Calculate sumary price of an item
 function sum(x) {
     let unitPriceValue = parseFloat(unitPrice[x].innerText);
     let quantityValue = parseInt(quantity[x].value);
@@ -41,7 +41,7 @@ function sum(x) {
     cost[x].innerText = costValue.toFixed(2).toString();
 }
 
-// calculate total price of items
+// Calculate total price of items
 function totalPriceCal() {
     let totalPrice = 0;
     for (let i = 0; i < numberOfItems; i++) {
@@ -50,19 +50,19 @@ function totalPriceCal() {
     total.innerText = totalPrice.toFixed(2).toString();
 }
 
-//calculate gst
+// Calculate gst
 function gstCal() {
     gst.innerText = (parseFloat(total.innerText) * 0.1).toFixed(2).toString();
 }
 
-//Pass total and gst values to hidden inputs
+// Pass total and gst values to hidden inputs
 let gstInput = document.getElementById('gstInput');
 gstInput.value = parseFloat(gst.innerText).toFixed(2);
 
 let totalInput = document.getElementById('totalInput');
 totalInput.value = parseFloat(total.innerText).toFixed(2);
 
-//Paypal button
+// Paypal button
 function initPayPalButton() {
     paypal
         .Buttons({
@@ -87,6 +87,7 @@ function initPayPalButton() {
             },
 
             onApprove: function (data, actions) {
+                orderData = '';
                 return actions.order.capture().then(function (orderData) {
                     // Full available details
                     console.log(

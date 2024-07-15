@@ -13,9 +13,9 @@
 
         //Check if cart is not empty
         if(isset($_SESSION['counter']) && $_SESSION['counter'] > 0) {
-            if($_SESSION['total'] == '' || $_SESSION['gst'] == '' || $_SESSION['pay_fname'] == '' || $_SESSION['pay_lname'] == '' || $_SESSION['pay_email'] == '' 
+            if($_SESSION['pay_fname'] == '' || $_SESSION['pay_lname'] == '' || $_SESSION['pay_email'] == '' 
                 || $_SESSION['pay_address'] == '' || $_SESSION['pay_city'] == '' || $_SESSION['pay_state'] == '' || $_SESSION['pay_pcode'] == '' 
-                || $_SESSION['pay_phone'] == '' || $_SESSION['card_type'] == '' || $_SESSION['card_no'] == '' || $_SESSION['code'] == '' || $_SESSION['exp_date']) {
+                || $_SESSION['pay_phone'] == '' || $_SESSION['card_type'] == '' || $_SESSION['card_no'] == '' || $_SESSION['code'] == '' || $_SESSION['exp_date'] == '') {
                 echo "<script type='text/javascript'>
                     alert('You did not pay!'); 
                     window.location.href = '../cart.php';
@@ -30,8 +30,25 @@
                 mysqli_query($link, $updateOrderQuery);
                 mysqli_close($link);
 
+                //Clear cart
                 unset($_SESSION['counter']);
 		        unset($_SESSION['cart']);
+
+                //Clear sessions
+                $_SESSION['pay_fname'] = '';
+                $_SESSION['pay_lname'] = '';
+                $_SESSION['pay_email'] = '';
+                $_SESSION['pay_address'] = '';
+                $_SESSION['pay_city'] = '';
+                $_SESSION['pay_state'] = '';
+                $_SESSION['pay_pcode'] = '';
+                $_SESSION['pay_phone'] = '';
+                $_SESSION['card_type'] = '';
+                $_SESSION['card_no'] = '';
+                $_SESSION['code'] = '';
+                $_SESSION['exp_date'] = '';
+                $_SESSION['total'] = '';
+                $_SESSION['gst'] = '';
     
                 echo "<script type='text/javascript'>
                         alert('Order is submited successfully!'); 

@@ -4,13 +4,14 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" type="text/css" href="css/styles.css" />
+        <link rel="stylesheet" type="text/css" href="css/responsive.css" />
         <title>iBuy</title>
     </head>
     <body>
         <header>
             <div class="container">
                 <a href="index.php">
-                    <img class="logo" src="./assets/logo.png" alt="" />
+                    <img class="logo logo-mobile" src="./assets/logo.png" alt="" />
                 </a>
             </div>
         </header>

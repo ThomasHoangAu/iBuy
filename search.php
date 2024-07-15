@@ -4,15 +4,16 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" type="text/css" href="css/styles.css" />
+        <link rel="stylesheet" type="text/css" href="css/responsive.css" />
         <title>iBuy</title>
     </head>
     <body>
         <header>
             <div class="container">
-                <a href="index.php">
+                <a class="logo-mobile" href="index.php">
                     <img class="logo" src="./assets/logo.png" alt="" />
                 </a>
-                <form class="search" action="search.php" method="POST">
+                <form class="search search-mobile" action="search.php" method="POST">
                     <input type="text" name="search" />
                     <button type="submit" class="search-icon">
                         <div>
@@ -105,7 +106,7 @@
         </header>
 
         <div class="container">
-            <div class="banner">
+            <div class="banner hide">
                 <div class="mySlides fade">
                     <img src="./assets/banner/banner1.jpg" style="width:80%" />
                 </div>
@@ -125,7 +126,7 @@
             <br />
 
             <!-- The dots/circles -->
-            <div style="text-align: center">
+            <div class="hide" style="text-align: center">
                 <span class="dot" onclick="currentSlide(1)"></span>
                 <span class="dot" onclick="currentSlide(2)"></span>
                 <span class="dot" onclick="currentSlide(3)"></span>

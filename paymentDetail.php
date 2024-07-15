@@ -17,6 +17,7 @@
             $_SESSION['code'] = '';
             $_SESSION['exp_date'] = '';
         }
+
         if($_SESSION['card_type'] == '') {
             $_SESSION['card_type'] = 'Visa';
         }
@@ -27,16 +28,16 @@
             $gst = $_SESSION['gst'];
             $total = $_SESSION['total'];
         }else if(!isset($_SESSION['total'], $_SESSION['gst'])) {
-            $gst = '';
-            $total = '';
-            echo "<script type='text/javascript'>
-                        alert('You did not pay. Please back to cart to pay!'); 
-                        window.location.href = 'cart.php';
-                    </script>";
-        }else {
-            $gst = $_SESSION['total'];
-            $total = $_SESSION['gst'];
-        }
+                $gst = '';
+                $total = '';
+                echo "<script type='text/javascript'>
+                            alert('You did not pay. Please back to cart to pay!'); 
+                            window.location.href = 'cart.php';
+                        </script>";
+            }else {
+                $gst = $_SESSION['total'];
+                $total = $_SESSION['gst'];
+            }
         
         $json = json_encode($_SESSION['card_type']);
         
@@ -48,15 +49,16 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" type="text/css" href="css/styles.css" />
+        <link rel="stylesheet" type="text/css" href="css/responsive.css" />
         <title>iBuy</title>
     </head>
     <body>
     <header>
             <div class="container">
-                <a href="index.php">
+                <a class="logo-mobile" href="index.php">
                     <img class="logo" src="./assets/logo.png" alt="" />
                 </a>
-                <form class="search" action="search.php" method="POST">
+                <form class="search search-mobile" action="search.php" method="POST">
                     <input type="text" name="search" />
                     <button type="submit" class="search-icon">
                         <div>

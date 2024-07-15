@@ -43,15 +43,16 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" type="text/css" href="css/styles.css" />
+        <link rel="stylesheet" type="text/css" href="css/responsive.css" />
         <title>iBuy</title>
     </head>
     <body>
     <header>
             <div class="container">
-                <a href="index.php">
+                <a class="logo-mobile" href="index.php">
                     <img class="logo" src="./assets/logo.png" alt="" />
                 </a>
-                <form class="search" action="search.php" method="POST">
+                <form class="search search-mobile" action="search.php" method="POST">
                     <input type="text" name="search" />
                     <button type="submit" class="search-icon">
                         <div>

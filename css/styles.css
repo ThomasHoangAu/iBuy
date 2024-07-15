@@ -48,22 +48,23 @@ body {
 }
 
 header {
-    height: 80px;
     background: linear-gradient(-180deg, #f53d2d, #f63);
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
 }
 
 header .container {
-    height: 100%;
+    min-height: 80px;
+    line-height: 80px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 header .container .logo {
+    display: block;
+    margin: auto;
     width: 150px;
+    height: 100%;
+    line-height: 100%;
 }
 
 header .container .search {
@@ -84,7 +85,7 @@ header .container .search input {
     outline: none;
     border: 0px;
     border-radius: 2px;
-    width: 80%;
+    flex-grow: 1;
 }
 
 header .container .search .search-icon {
@@ -113,12 +114,8 @@ header .container .search .search-icon div svg {
     width: 20px;
 }
 
-header .container .loggedin {
-    display: flex;
-    justify-content: space-between;
-}
-
-header .container .not-loggedin {
+header .container .loggedin,
+.not-loggedin {
     display: flex;
     justify-content: space-between;
 }
@@ -293,7 +290,7 @@ header .container .cart-icon {
 /*product*/
 .product-detail {
     display: grid;
-    grid-template-columns: 40% auto;
+    grid-template-columns: auto 60%;
     column-gap: 20px;
     row-gap: 20px;
     padding: 20px;
@@ -309,9 +306,11 @@ header .container .cart-icon {
 
 .product-description {
     font-size: 18px;
+    width: 100%;
 }
 
 .product-price {
+    width: 100%;
     font-size: 30px;
     color: #f53d2d;
     margin-top: 40px;
@@ -332,6 +331,10 @@ header .container .cart-icon {
     justify-content: center;
     margin-left: 10px;
     margin-right: 10px;
+}
+
+.quantity-button button {
+    background-color: #c4bebe;
 }
 
 .increase,
@@ -380,6 +383,7 @@ header .container .cart-icon {
 
 /*signup, login*/
 .sign {
+    max-width: 100%;
     width: 400px;
     background-color: white;
     margin-left: auto;
@@ -409,7 +413,7 @@ header .container .cart-icon {
 }
 
 .error-message span {
-    font-size: 12px;
+    font-size: 14px;
     color: red;
     display: block;
     margin-top: 4px;
@@ -418,7 +422,7 @@ header .container .cart-icon {
 /*Cart*/
 .subject {
     display: grid;
-    grid-template-columns: 5%50% 15% 15% 15%;
+    grid-template-columns: 25px auto 15% 15% 15%;
     align-items: center;
     color: rgba(0, 0, 0, 0.7);
     margin-bottom: 20px;
@@ -433,7 +437,7 @@ header .container .cart-icon {
 
 .content {
     display: grid;
-    grid-template-columns: 5% 50% 15% 15% 15%;
+    grid-template-columns: 25px auto 15% 15% 15%;
     align-items: center;
     margin-bottom: 20px;
     background-color: white;
@@ -448,17 +452,18 @@ header .container .cart-icon {
     display: flex;
     text-align: start;
     align-items: center;
+    height: 100%;
 }
 
 .content .content-product img {
     width: 100px;
     margin-right: 10px;
+    margin-left: 10px;
     border: 1px solid #e5e7eb;
 }
 
 .content .content-product p {
-    width: 300px;
-    overflow: hidden;
+    margin-right: 10px;
 }
 
 .quantity {
@@ -474,7 +479,8 @@ header .container .cart-icon {
 }
 
 .deleteButton {
-    width: 25px;
+    display: block;
+    width: 100%;
     height: 25px;
     color: red;
 }
