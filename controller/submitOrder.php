@@ -52,13 +52,13 @@
     
                 echo "<script type='text/javascript'>
                         alert('Order is submited successfully!'); 
-                        window.location.href = '../index.php';
+                        window.location.href = '../index.html';
                     </script>";
             }
         }else {
             echo "<script type='text/javascript'>
                     alert('Nothing in cart. Please shopping.'); 
-                    window.location.href = '../index.php';
+                    window.location.href = '../index.html';
                 </script>";
         }
     }else {

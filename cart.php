@@ -10,7 +10,7 @@
     <body>
     <header>
             <div class="container">
-                <a class="logo-mobile" href="index.php">
+                <a class="logo-mobile" href="index.html">
                     <img class="logo" src="./assets/logo.png" alt="" />
                 </a>
                 <form class="search search-mobile" action="search.php" method="POST">
@@ -190,7 +190,7 @@
                         ></script>
 
                         <button class='button'>
-                            <a href='index.php'>Shopping</a>
+                            <a href='index.html'>Shopping</a>
                         </button>
                     </div>
                 </form>

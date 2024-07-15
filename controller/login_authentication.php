@@ -27,7 +27,7 @@
             $_SESSION['loggedin'] = true;
 
             //re-direct to home page
-            header("Location: ../index.php");
+            header("Location: ../index.html");
             exit;
     }else {
         header("Location: ../login.php?error=1");

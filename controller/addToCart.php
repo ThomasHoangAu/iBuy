@@ -26,7 +26,7 @@
 
         if (($product_id == "") or ($quantity < 1)) {
             //Redirect the user back to product list page
-            header("Location: ../index.php");
+            header("Location: ../index.html");
             exit;
         }else {
             //Insert a product into orders table and order_details table

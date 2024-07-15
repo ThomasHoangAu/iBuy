@@ -10,7 +10,7 @@
     <body>
         <header>
             <div class="container">
-                <a href="index.php">
+                <a href="index.html">
                     <img class="logo logo-mobile" src="./assets/logo.png" alt="" />
                 </a>
             </div>
