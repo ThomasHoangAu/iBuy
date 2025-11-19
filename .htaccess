@@ -1,0 +1,19 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    RewriteBase /iBuy/
+
+    # Test rule
+
+    RewriteRule ^test$ test.html [L]
+
+    # If request is a real file or folder, serve it
+
+        RewriteCond %{REQUEST_FILENAME} -f [OR]
+        RewriteCond %{REQUEST_FILENAME} -d
+        RewriteRule ^ - [L]
+
+        # All other requests go to index.php
+        RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
+
+</IfModule>

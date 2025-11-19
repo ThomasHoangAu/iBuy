@@ -3,21 +3,21 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" type="text/css" href="css/styles.css" />
-        <link rel="stylesheet" type="text/css" href="css/responsive.css" />
+        <link rel="stylesheet" type="text/css" href="/iBuy/css/styles.css" />
+        <link rel="stylesheet" type="text/css" href="/iBuy/css/responsive.css" />
         <title>iBuy</title>
     </head>
     <body>
         <header>
             <div class="container">
-                <a href="index.html">
-                    <img class="logo logo-mobile" src="./assets/logo.png" alt="" />
+                <a href="home">
+                    <img class="logo logo-mobile" src="/iBuy/assets/logo.png" alt="" />
                 </a>
             </div>
         </header>
 
         <div class="container">
-            <form id="sign-form" class="sign" action="controller/signup_authentication.php" method="post">
+            <form id="sign-form" class="sign" action="signup_authentication" method="post">
                 <div class="title">Sign Up</div>
                 <div>
                     <input id="email" type="text" placeholder="Email" name="email" />
@@ -141,5 +141,5 @@
             <div class="footer">© 2024 iBuy. All Rights Reserved .</div>
         </div>
     </body>
-    <script src="js/signup_validation.js"></script>
+    <script src="/iBuy/js/signup_validation.js"></script>
 </html>

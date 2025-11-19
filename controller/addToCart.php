@@ -1,7 +1,7 @@
 <?php
-    include '../model/Cart.php';
-    include '../model/Product.php';
-    require_once('../connection/conn_iBuyDb.php');
+    include __DIR__ . '/../model/Cart.php';
+    include __DIR__ . '/../model/Product.php';
+    require_once __DIR__ . '/../connection/conn_iBuyDb.php';
 
     session_start();
     if($_SESSION['loggedin']) {
@@ -26,7 +26,7 @@
 
         if (($product_id == "") or ($quantity < 1)) {
             //Redirect the user back to product list page
-            header("Location: ../index.html");
+            header("Location: home");
             exit;
         }else {
             //Insert a product into orders table and order_details table
@@ -68,13 +68,14 @@
 
             mysqli_close($link);
     
-            header("Location: ../cart.php");
+            header("Location: cart");
+            
             exit;
         }
     }else {
         echo "<script type='text/javascript'>
                 alert('Please login.'); 
-                window.location.href = '../login.php';
+                window.location.href = 'login';
             </script>";
     }
 ?>

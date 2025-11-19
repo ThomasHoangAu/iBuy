@@ -1,40 +1,46 @@
 <?php
         session_start();
-        require_once('connection/conn_iBuyDb.php');
+        require_once __DIR__ . '/../connection/conn_iBuyDb.php';
 
-        if(isset($_POST['pay_fname'], $_POST['pay_lname'], $_POST['pay_email'], $_POST['pay_address'], 
-        $_POST['pay_city'], $_POST['pay_state'], $_POST['pay_pcode'], $_POST['pay_phone'], $_POST['total'], 
-        $_POST['gst'], $_POST['card_type'], $_POST['card_no'], $_POST['code'], $_POST['exp_date'])) {
-            $_SESSION['pay_fname'] = $pay_fname = $_POST['pay_fname'];
-            $_SESSION['pay_lname'] = $pay_lname = $_POST['pay_lname'];
-            $_SESSION['pay_email'] = $pay_email = $_POST['pay_email'];
-            $_SESSION['pay_address'] = $pay_address = $_POST['pay_address'];
-            $_SESSION['pay_city'] = $pay_city = $_POST['pay_city'];
-            $_SESSION['pay_state'] = $pay_state = $_POST['pay_state'];
-            $_SESSION['pay_pcode'] = $pay_pcode = $_POST['pay_pcode'];
-            $_SESSION['pay_phone'] = $pay_phone = $_POST['pay_phone'];
-            $total = $_POST['total'];
-            $gst = $_POST['gst'];
-            $_SESSION['card_type'] = $card_type = $_POST['card_type'];
-            $_SESSION['card_no'] = $card_no = $_POST['card_no'];
-            $_SESSION['code'] = $code = $_POST['code'];
-            $_SESSION['exp_date'] = $exp_date = $_POST['exp_date'];
-        }else {
-            $_SESSION['pay_fname'] = $pay_fname = '';
-            $_SESSION['pay_lname'] = $pay_lname = '';
-            $_SESSION['pay_email'] = $pay_email = '';
-            $_SESSION['pay_address'] = $pay_address = '';
-            $_SESSION['pay_city'] = $pay_city = '';
-            $_SESSION['pay_state'] = $pay_state = '';
-            $_SESSION['pay_pcode'] = $pay_pcode = '';
-            $_SESSION['pay_phone'] = $pay_phone = '';
-            $total = '';
-            $gst = '';
-            $_SESSION['card_type'] = $card_type = '';
-            $_SESSION['card_no'] = $card_no = '';
-            $_SESSION['code'] = $code = '';
-            $_SESSION['exp_date'] = $exp_date = '';
+        if(!isset($_SESSION['pay_fname'], $_SESSION['pay_lname'], $_SESSION['pay_email'], $_SESSION['pay_address'], 
+        $_SESSION['pay_city'], $_SESSION['pay_state'], $_SESSION['pay_pcode'], $_SESSION['pay_phone'], $_SESSION['card_type'], $_SESSION['card_no'], $_SESSION['code'], $_SESSION['exp_date'])) {
+            $_SESSION['pay_fname'] = '';
+            $_SESSION['pay_lname'] = '';
+            $_SESSION['pay_email'] = '';
+            $_SESSION['pay_address'] = '';
+            $_SESSION['pay_city'] = '';
+            $_SESSION['pay_state'] = '';
+            $_SESSION['pay_pcode'] = '';
+            $_SESSION['pay_phone'] = '';
+            $_SESSION['card_type'] = 'Visa';
+            $_SESSION['card_no'] = '';
+            $_SESSION['code'] = '';
+            $_SESSION['exp_date'] = '';
         }
+
+        if($_SESSION['card_type'] == '') {
+            $_SESSION['card_type'] = 'Visa';
+        }
+
+        if(isset($_POST['gst'], $_POST['total'])) {
+            $_SESSION['gst'] = $_POST['gst'];
+            $_SESSION['total'] = $_POST['total'];
+            $gst = $_SESSION['gst'];
+            $total = $_SESSION['total'];
+        }else if(!isset($_SESSION['total'], $_SESSION['gst'])) {
+                $gst = '';
+                $total = '';
+                echo "<script type='text/javascript'>
+                            alert('You did not pay. Please back to cart to pay!'); 
+                            window.location.href = 'cart';
+                        </script>";
+            }else {
+                $gst = $_SESSION['total'];
+                $total = $_SESSION['gst'];
+            }
+        
+        $json = json_encode($_SESSION['card_type']);
+        
 ?>
 
 <!DOCTYPE html>
@@ -42,17 +48,17 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" type="text/css" href="css/styles.css" />
-        <link rel="stylesheet" type="text/css" href="css/responsive.css" />
+        <link rel="stylesheet" type="text/css" href="/iBuy/css/styles.css" />
+        <link rel="stylesheet" type="text/css" href="/iBuy/css/responsive.css" />
         <title>iBuy</title>
     </head>
     <body>
     <header>
             <div class="container">
-                <a class="logo-mobile" href="index.html">
-                    <img class="logo" src="./assets/logo.png" alt="" />
+                <a class="logo-mobile" href="home">
+                    <img class="logo" src="/iBuy/assets/logo.png" alt="" />
                 </a>
-                <form class="search search-mobile" action="search.php" method="POST">
+                <form class="search search-mobile" action="search" method="POST">
                     <input type="text" name="search" />
                     <button type="submit" class="search-icon">
                         <div>
@@ -84,11 +90,11 @@
                                     </div>
                                     <div class='separate'></div>
                                     <div class='log-in'>
-                                        <a href='controller/logout.php'><p>Log Out</p></a>
+                                        <a href='logout'><p>Log Out</p></a>
                                     </div>
                                     <div class='separate'></div>
                                     <div class='cart-icon'>
-                                        <a href='cart.php'>
+                                        <a href='cart'>
                                             <svg
                                                 fill='white'
                                                 xmlns='http://www.w3.org/2000/svg'
@@ -128,11 +134,11 @@
                             echo "
                                     <div class='not-loggedin'>
                                         <div class='sign-up'>
-                                            <a href='signup.php'><p>Sign Up</p> </a>
+                                            <a href='signup'><p>Sign Up</p> </a>
                                         </div>
                                         <div class='separate'></div>
                                         <div class='log-in'>
-                                            <a href='login.php'><p>Log In</p></a>
+                                            <a href='login'><p>Log In</p></a>
                                         </div>
                                     </div>
                                 ";
@@ -143,8 +149,8 @@
 
         <div class="container">
             <div class="cart">
-                <div class="title">Display Order</div>
-                <form action="controller/submitOrder.php" method="POST" id="process_payment" class="form">
+                <div class="title">Payment</div>
+                <form action="displayOrder" method="POST" id="process_payment" class="form">
                     <fieldset>
                         <legend>Shipping details:</legend>
 
@@ -153,11 +159,10 @@
                                 <label for="pay_fname">First Name:</label>
 
                                 <input
-                                    disabled
                                     type="text"
                                     name="pay_fname"
                                     id="pay_fname"
-                                    value="<?php echo $pay_fname; ?>"
+                                    value="<?php echo $_SESSION['pay_fname']; ?>"
                                 />
                             </li>
 
@@ -165,11 +170,10 @@
                                 <label for="pay_lname">Last Name:</label>
 
                                 <input
-                                    disabled
                                     type="text"
                                     name="pay_lname"
                                     id="pay_lname"
-                                    value="<?php echo $pay_lname; ?>"
+                                    value="<?php echo $_SESSION['pay_lname']; ?>"
                                 />
                             </li>
 
@@ -177,11 +181,10 @@
                                 <label for="pay_email">Email:</label>
 
                                 <input
-                                    disabled
                                     type="text"
                                     name="pay_email"
                                     id="pay_email"
-                                    value="<?php echo $pay_email; ?>"
+                                    value="<?php echo $_SESSION['pay_email']; ?>"
                                 />
                             </li>
 
@@ -191,11 +194,10 @@
                                 >
 
                                 <input
-                                    disabled
                                     type="text"
                                     name="pay_address"
                                     id="pay_address"
-                                    value="<?php echo $pay_address; ?>"
+                                    value="<?php echo $_SESSION['pay_address']; ?>"
                                 />
                             </li>
 
@@ -203,11 +205,10 @@
                                 <label for="pay_city">City:</label>
 
                                 <input
-                                    disabled
                                     type="text"
                                     name="pay_city"
                                     id="pay_city"
-                                    value="<?php echo $pay_city; ?>"
+                                    value="<?php echo $_SESSION['pay_city']; ?>"
                                 />
                             </li>
 
@@ -215,11 +216,10 @@
                                 <label for="pay_state">State:</label>
 
                                 <input
-                                    disabled
                                     type="text"
                                     name="pay_state"
                                     id="pay_state"
-                                    value="<?php echo $pay_state; ?>"
+                                    value="<?php echo $_SESSION['pay_state']; ?>"
                                 />
                             </li>
 
@@ -227,11 +227,10 @@
                                 <label for="pay_pcode">Postcode:</label>
 
                                 <input
-                                    disabled
                                     type="text"
                                     name="pay_pcode"
                                     id="pay_pcode"
-                                    value="<?php echo $pay_pcode; ?>"
+                                    value="<?php echo $_SESSION['pay_pcode']; ?>"
                                 />
                             </li>
 
@@ -239,11 +238,10 @@
                                 <label for="pay_phone">Telephone:</label>
 
                                 <input
-                                    disabled
                                     type="phone"
                                     name="pay_phone"
                                     id="pay_phone"
-                                    value="<?php echo $pay_phone; ?>"
+                                    value="<?php echo $_SESSION['pay_phone']; ?>"
                                 />
                             </li>
                         </ol>
@@ -253,42 +251,54 @@
                         <legend>Payment details:</legend>
 
                         <ol>
-                            <li>
+                            <li style="display: none;">
                                 <label>Total:</label>
-                                <div class='display_total' style="display: flex;">
-                                    <span style="height:30px; line-height:30px;">$</span>
-                                    <input disabled type='text' name='total' id='total' value='<?php echo $total; ?>' />
+                                <div class='display_total'>
+                                    <span>$</span>
+                                    <input type='text' name='total' id='total' value='<?php echo $total; ?>' />
                                 </div>
                             </li>
 
-                            <li>
+                            <li style="display: none;">
                                 <label>GST included:</label>
-                                <div class='display_total' style="display: flex;">
-                                    <span style="height:30px; line-height:30px;">$</span>
-                                    <input disabled type='text' name='gst' id='total' value='<?php echo $gst; ?>' />
+                                <div class='display_total'>
+                                    <span>$</span>
+                                    <input type='text' name='gst' id='total' value='<?php echo $gst; ?>' />
                                 </div>
                             </li>
 
                             <li>
                                 <label>Card Type:</label>
-                                <input
-                                    disabled
-                                    type="text"
-                                    name="card_type"
-                                    id="card_type"
-                                    value="<?php echo $card_type; ?>"
-                                />
+                                
+                                <select name="card_type" id="card_type">
+                                    <option value="Visa">Visa</option>
+
+                                    <option value="Master Card">
+                                        Master Card
+                                    </option>
+
+                                    <option value="American Express">
+                                        American Express
+                                    </option>
+                                </select>
+
+                                <?php
+                                    echo "
+                                            <script>
+                                                document.getElementById('card_type').value = $json;
+                                            </script>
+                                        ";
+                                ?>
                             </li>
 
                             <li>
                                 <label for="card_no">Card number:</label>
 
                                 <input
-                                    disabled
                                     type="text"
                                     name="card_no"
                                     id="card_no"
-                                    value="<?php echo $card_no; ?>"
+                                    value="<?php echo $_SESSION['card_no']; ?>"
                                 />
                             </li>
 
@@ -296,11 +306,10 @@
                                 <label for="code">Verification code:</label>
 
                                 <input
-                                    disabled
                                     type="text"
                                     name="code"
                                     id="code"
-                                    value="<?php echo $code; ?>"
+                                    value="<?php echo $_SESSION['code']; ?>"
                                 />
                             </li>
 
@@ -308,19 +317,18 @@
                                 <label for="exp_date">Expiry Date:</label>
 
                                 <input
-                                    disabled
                                     type="text"
                                     name="exp_date"
                                     id="exp_date"
-                                    value="<?php echo $exp_date; ?>"
+                                    value="<?php echo $_SESSION['exp_date']; ?>"
                                 />
                             </li>
                         </ol>
 
                         <div class='buy'>
-                            <button class="button" type="submit">Submit Order</button>
+                            <button class="button" type="submit">Display Order</button>
                             <button class='button' type="button">
-                                <a href='paymentDetail.php'>Back</a>
+                                <a href='home'>Shopping</a>
                             </button>
                         </div>
                     </fieldset>

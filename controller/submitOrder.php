@@ -1,6 +1,6 @@
 <?php
     session_start();
-    require_once('../connection/conn_iBuyDb.php');
+    require_once __DIR__ . '/../connection/conn_iBuyDb.php';
     if(isset($_SESSION['customer_id'])) {
         $lastOrderQuery = "SELECT order_id FROM orders WHERE (customer_id = '$_SESSION[customer_id]' AND is_paid = 0) ORDER BY order_id DESC LIMIT 1";
         $lastOrderResult = mysqli_query($link, $lastOrderQuery);
@@ -18,7 +18,7 @@
                 || $_SESSION['pay_phone'] == '' || $_SESSION['card_type'] == '' || $_SESSION['card_no'] == '' || $_SESSION['code'] == '' || $_SESSION['exp_date'] == '') {
                 echo "<script type='text/javascript'>
                     alert('You did not pay!'); 
-                    window.location.href = '../cart.php';
+                    window.location.href = 'cart';
                 </script>";
             }else {
                 $updateOrderQuery = "UPDATE orders SET total_amount = '$_SESSION[total]', gst = '$_SESSION[gst]', pay_fname = '$_SESSION[pay_fname]', 
@@ -52,19 +52,19 @@
     
                 echo "<script type='text/javascript'>
                         alert('Order is submited successfully!'); 
-                        window.location.href = '../index.html';
+                        window.location.href = 'home';
                     </script>";
             }
         }else {
             echo "<script type='text/javascript'>
                     alert('Nothing in cart. Please shopping.'); 
-                    window.location.href = '../index.html';
+                    window.location.href = 'home';
                 </script>";
         }
     }else {
         echo "<script type='text/javascript'>
                 alert('Please login.'); 
-                window.location.href = '../login.php';
+                window.location.href = 'login';
             </script>";
     }
     

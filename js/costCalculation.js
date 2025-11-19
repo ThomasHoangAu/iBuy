@@ -22,7 +22,7 @@ for (let i = 0; i < numberOfItems; i++) {
 totalPriceCal();
 gstCal();
 
-// Change quantity of an item
+// Change quantity of an item and get total cost of the cart
 function change(m, n) {
     let quantityValue = parseInt(quantity[m].value);
     quantityValue += n;

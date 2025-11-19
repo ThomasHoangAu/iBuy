@@ -3,17 +3,17 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" type="text/css" href="css/styles.css" />
-        <link rel="stylesheet" type="text/css" href="css/responsive.css" />
+        <link rel="stylesheet" type="text/css" href="/iBuy/css/styles.css" />
+        <link rel="stylesheet" type="text/css" href="/iBuy/css/responsive.css" />
         <title>iBuy</title>
     </head>
     <body>
         <header>
             <div class="container">
-                <a class="logo-mobile" href="index.html">
-                    <img class="logo" src="./assets/logo.png" alt="" />
+                <a class="logo-mobile" href="home">
+                    <img class="logo" src="/iBuy/assets/logo.png" alt="" />
                 </a>
-                <form class="search search-mobile" action="search.php" method="POST">
+                <form class="search search-mobile" action="search" method="POST">
                     <input type="text" name="search" />
                     <button type="submit" class="search-icon">
                         <div>
@@ -32,11 +32,9 @@
                 </form>
 
                 <?php
-                    include './model/Cart.php';
-                    include './model/Product.php';
-                    require_once('connection/conn_iBuyDb.php');
-                    
                     session_start();
+                    require_once __DIR__ . '/../connection/conn_iBuyDb.php';
+
                     if(isset($_SESSION['loggedin'])) {
                         $userName = ucfirst($_SESSION['first_name']).' '.ucfirst($_SESSION['last_name']);
                         echo "
@@ -50,7 +48,7 @@
                                     </div>
                                     <div class='separate'></div>
                                     <div class='log-in'>
-                                        <a href='controller/logout.php'><p>Log Out</p></a>
+                                        <a href='logout'><p>Log Out</p></a>
                                     </div>
                                     <div class='separate'></div>
                                     <div class='cart-icon'>
@@ -72,64 +70,33 @@
                             ";
 
                             // Display cart notification
-                            $lastOrderQuery = "SELECT order_id, is_paid FROM orders WHERE (customer_id = '$_SESSION[customer_id]' AND is_paid = 0) ORDER BY order_id DESC LIMIT 1";
-                            $lastOrderResult = mysqli_query($link, $lastOrderQuery);
-                            $lastOrderRow = $lastOrderResult->fetch_row();
-                            if($lastOrderRow != null) {
-                                $lastOrderId = $lastOrderRow[0];
-                            }else{
-                                $lastOrderId = null;
-                            }
-                            $cartQuery = "SELECT COUNT(order_detail_id) FROM order_details WHERE order_id = '$lastOrderId'";
-                            $cartResult = mysqli_query($link, $cartQuery);
-                            $cartRow = $cartResult->fetch_row();
-                            $numOfItems = $cartRow[0];
-
-                            //Set $_SESSION['counter']
-                            $_SESSION['counter'] = $numOfItems;
-
-                            //Add product to cart
-                            if($_SESSION['counter'] > 0) {
-                                $cartProductQuery = "SELECT * FROM order_details WHERE order_id = '$lastOrderId'";
-                                $cartProductResult = mysqli_query($link, $cartProductQuery);
-                                
-                                $cart = new Cart();
-                                while($row = mysqli_fetch_assoc($cartProductResult)) {
-                                    $product_id = $row['product_id'];
-                                    $productQuery = "SELECT description, product_image FROM products WHERE product_id = '$product_id'";
-                                    $productQueryResult = mysqli_query($link, $productQuery);
-                                    $productRow = $productQueryResult->fetch_assoc();
-                                    $product = new Product($row['product_id'], $productRow['description'], $row['quantity'], $row['price'], $productRow['product_image']);
-                                    $cart->add_product($row['order_detail_id'], $product);
-                                }
-                                
-                                //Set $_SESSION['counter']
-                                $_SESSION['cart'] = serialize($cart);
+                            if(isset($_SESSION['counter']) && $_SESSION['counter'] > 0) {
+                                $numOfItems = $_SESSION['counter'];
                             }else {
                                 $numOfItems = 0;
                             }
-
+                    
                             echo "
-                                        <script>
-                                            const numOfItems = $numOfItems;
-                                            let notification = document.getElementById('itemNotification');
-                                            notification.style.display = 'block';
-                                            if (numOfItems > 0) {
-                                                notification.textContent = numOfItems;
-                                            } else {
-                                                notification.style.display = 'none';
-                                            }
-                                        </script>
-                                    ";
-                    }else {
+                                    <script>
+                                        const numOfItems = $numOfItems;
+                                        let notification = document.getElementById('itemNotification');
+                                        notification.style.display = 'block';
+                                        if (numOfItems > 0) {
+                                            notification.textContent = numOfItems;
+                                        } else {
+                                            notification.style.display = 'none';
+                                        }
+                                    </script>
+                                ";
+                    } else {
                             echo "
                                     <div class='not-loggedin'>
                                         <div class='sign-up'>
-                                            <a href='signup.php'><p>Sign Up</p> </a>
+                                            <a href='signup'><p>Sign Up</p> </a>
                                         </div>
                                         <div class='separate'></div>
                                         <div class='log-in'>
-                                            <a href='login.php'><p>Log In</p></a>
+                                            <a href='login'><p>Log In</p></a>
                                         </div>
                                     </div>
                                 ";
@@ -137,19 +104,19 @@
                 ?>
             </div>
         </header>
-        
+
         <div class="container">
-            <div class="banner hide">
+            <div class="banner">
                 <div class="mySlides fade">
-                    <img src="./assets/banner/banner1.jpg" style="width:80%" />
+                    <img src="/iBuy/assets/banner/banner1.jpg" style="width:80%" />
                 </div>
 
                 <div class="mySlides fade">
-                    <img src="./assets/banner/banner2.jpg" style="width:80%" />
+                    <img src="/iBuy/assets/banner/banner2.jpg" style="width:80%" />
                 </div>
 
                 <div class="mySlides fade">
-                    <img src="./assets/banner/banner3.jpg" style="width:80%" />
+                    <img src="/iBuy/assets/banner/banner3.jpg" style="width:80%" />
                 </div>
 
                 <!-- Next and previous buttons -->
@@ -160,28 +127,27 @@
 
             <!-- The dots/circles -->
             <div class="hide" style="text-align: center">
-                <span class="dot" onclick="currentSlide(1)"></span>
-                <span class="dot" onclick="currentSlide(2)"></span>
-                <span class="dot" onclick="currentSlide(3)"></span>
+                <span class="dot dot-mobile" onclick="currentSlide(1)"></span>
+                <span class="dot dot-mobile" onclick="currentSlide(2)"></span>
+                <span class="dot dot-mobile" onclick="currentSlide(3)"></span>
             </div>
 
-            <div class="title">Everyday Product</div>
+            <div class="title">Search Result</div>
             
             <div class="product-list">
                 <?php
-                    // SQL query to fetch products
-                    $productListQuery = "SELECT * FROM products";
-                    // Execute query
-                    $result = mysqli_query($link, $productListQuery);
-
+                    $searchInput = $_POST['search'];
+                    $searchQuery = "SELECT * FROM products WHERE name LIKE '%$searchInput%'";
+                    $searchResult = mysqli_query($link, $searchQuery);
+                
                     // Check if any rows are returned
-                    if(mysqli_num_rows($result) > 0) {
+                    if(mysqli_num_rows($searchResult) > 0) {
                         // Fetch data and display it in a table
-                        while($row = mysqli_fetch_assoc($result)) {
+                        while($row = mysqli_fetch_assoc($searchResult)) {
                             echo "
                                 <div>
-                                    <a class='product-item' href='product.php?id=$row[product_id]'>
-                                        <img src='./assets/product/$row[product_image]'/>
+                                    <a class='product-item' href='product?id=$row[product_id]'>
+                                        <img src='/iBuy/assets/product/$row[product_image]'/>
                                     </a>
                                     <p class='discription'>$row[name]</p>
                                     <p class='symbol'>$<span class='price'>$row[price]</span></p>
@@ -192,7 +158,7 @@
                     }else {
                         echo "0 results";
                     }
-
+                
                     mysqli_close($link);
                 ?>
             </div>
@@ -201,7 +167,7 @@
         </div>
     </body>
 
-    <script src="js/banner.js"></script>
+    <script src="/iBuy/js/banner.js"></script>
    
 </html>
 

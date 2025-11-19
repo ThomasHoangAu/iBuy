@@ -3,17 +3,17 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" type="text/css" href="css/styles.css" />
-        <link rel="stylesheet" type="text/css" href="css/responsive.css" />
+        <link rel="stylesheet" type="text/css" href="/iBuy/css/styles.css" />
+        <link rel="stylesheet" type="text/css" href="/iBuy/css/responsive.css" />
         <title>iBuy</title>
     </head>
     <body>
-    <header>
+        <header>
             <div class="container">
-                <a class="logo-mobile" href="index.html">
-                    <img class="logo" src="./assets/logo.png" alt="" />
+                <a class="logo-mobile" href="home">
+                    <img class="logo" src="/iBuy/assets/logo.png" alt="" />
                 </a>
-                <form class="search search-mobile" action="search.php" method="POST">
+                <form class="search search-mobile" action="search" method="POST">
                     <input type="text" name="search" />
                     <button type="submit" class="search-icon">
                         <div>
@@ -32,11 +32,9 @@
                 </form>
                 
                 <?php
-                    include 'model/Cart.php';
-                    include 'model/Product.php';
-                    require_once('connection/conn_iBuyDb.php');
-
                     session_start();
+                    require_once __DIR__ . '/../connection/conn_iBuyDb.php';
+
                     if(isset($_SESSION['loggedin'])) {
                         $userName = ucfirst($_SESSION['first_name']).' '.ucfirst($_SESSION['last_name']);
                         echo "
@@ -50,11 +48,11 @@
                                     </div>
                                     <div class='separate'></div>
                                     <div class='log-in'>
-                                        <a href='controller/logout.php'><p>Log Out</p></a>
+                                        <a href='logout'><p>Log Out</p></a>
                                     </div>
                                     <div class='separate'></div>
                                     <div class='cart-icon'>
-                                        <a href='cart.php'>
+                                        <a href='cart'>
                                             <svg
                                                 fill='white'
                                                 xmlns='http://www.w3.org/2000/svg'
@@ -77,7 +75,7 @@
                             }else {
                                 $numOfItems = 0;
                             }
-                    
+
                             echo "
                                     <script>
                                         const numOfItems = $numOfItems;
@@ -90,15 +88,15 @@
                                         }
                                     </script>
                                 ";
-                    } else {
+                    }else {
                             echo "
                                     <div class='not-loggedin'>
                                         <div class='sign-up'>
-                                            <a href='signup.php'><p>Sign Up</p> </a>
+                                            <a href='signup'><p>Sign Up</p> </a>
                                         </div>
                                         <div class='separate'></div>
                                         <div class='log-in'>
-                                            <a href='login.php'><p>Log In</p></a>
+                                            <a href='login'><p>Log In</p></a>
                                         </div>
                                     </div>
                                 ";
@@ -108,97 +106,72 @@
         </header>
 
         <div class="container">
-            <div class="cart">
-                <div class="title">Cart</div>
-                <div class="subject">
-                    <input type="checkbox" style="opacity:0" />
-                    <div class="subject-product">Product</div>
-                    <div class="subject-price">Unit Price</div>
-                    <div class="subject-quantity">Quantity</div>
-                    <div class="subject-cost">Cost</div>
-                </div>
-
+            <div class="product-detail">
                 <?php
-                    $cart = new Cart();
-                    if(isset($_SESSION['counter']) && $_SESSION['counter'] > 0) {
-                        $cart = unserialize($_SESSION['cart']);
-                        $products = $cart->products;
-                        $key = array_keys($products);
-                        for($i = 0; $i < $cart->get_depth(); $i++) {
-                            $product = $cart->get_product($key[$i]);
-                            $product_id = $product->get_product_id();
-                            $product_des = $product->get_product_des();
-                            $qty = $product->get_qty();
-                            $unit_price = $product->get_unit_price();
-                            $product_img= $product->get_product_img();
+                    // Check if product ID is provided in the URL
+                    if(isset($_GET['id'])) {
+                        // Sanitize the input to prevent SQL injection
+                        $product_id = mysqli_real_escape_string($link, $_GET['id']);
 
+                        // Fetch product details from the database
+                        $sql = "SELECT * FROM products WHERE product_id = '$product_id'";
+                    
+                        // Execute query
+                        $result = mysqli_query($link, $sql);
+
+                        if ($result->num_rows > 0) {
+                            $row = $result->fetch_assoc();
+                            
+                            // Display product details
                             echo "
-                                    <div class='content'>
-                                        <form action='controller/deleteCartItem.php?order_detail_id=$key[$i]' method='POST'>
-                                            <input name='deleteButton' class='deleteButton' type='submit' value='X' />
-                                        </form>
-                                        <div class='content-product'>
-                                            <img src='./assets/product/$product_img'/>
-                                            <p>
-                                                $product_des
-                                            </p>
-                                        </div>
-                                        <div style='display: flex; justify-content:center'>
-                                            <span>$</span>
-                                            <span class='content-price'>$unit_price</span>
-                                        </div>
-                                        <form action='controller/changeQuantity.php?order_detail_id=$key[$i]' class='quantity-button quantity-button-mobile' method='POST'>
-                                            <button type='submit' class='decrease'>-</button>
-                                            <input class='quantity' name='quantity' value='$qty' />
-                                            <button type='submit' class='increase'>+</button>
-                                        </form>
-                                        <div style='display:flex; justify-content:center'>
-                                            <span>$</span>
-                                            <span class='content-cost'>-</span>
-                                        </div>
+                                    <div class='product-picture'>
+                                        <img src='/iBuy/assets/product/$row[product_image]' />
                                     </div>
-                            ";
+
+                                    <form class='product-action' action='addToCart' method='POST'>
+                                        <div class='product-description'>
+                                            $row[description]
+                                        </div>
+                                        <div class='product-price'>$$row[price]</div>
+                                        <div class='product-quantity'>
+                                            <div>Quantity</div>
+                                            <div class='quantity-button'>
+                                                <button type='button' onclick='change(-1)' class='decrease'>
+                                                    -
+                                                </button>
+                                                <input id='quantity' value='1' name='quantity'/>
+                                                <button type='button' onclick='change(1)' class='increase'>
+                                                    +
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class='buy buy-mobile'>
+                                            <button class='button' type='submit'>Add To Cart</button>
+                                            <button class='button'>
+                                                <a href='home'>Shopping</a>
+                                            </button>
+                                        </div>
+                                    </form>
+                                ";
+                            $_SESSION['pro_id'] = $product_id;
+                            $_SESSION['pro_price'] = $row['price'];
+                            $_SESSION['pro_des'] = $row['description'];
+                            $_SESSION['pro_img'] = $row['product_image'];
+
+                        } else {
+                            echo "Product not found";
                         }
                     }else {
-                        echo "0 results";
+                        echo "Invalid product ID";
                     }
+
                     mysqli_close($link);
-                    
                 ?>
-                
-                <form action="paymentDetail.php" method="POST">
-                    <div class="total">
-                        <span style="font-size: 16px">GST Included: $</span>
-                        <span style="font-size: 16px" id="gst">-</span>
-                        <input type="hidden" id="gstInput" name="gst" />
-                    </div>
-                    <div class="total">
-                        <span>Total: $</span>
-                        <span id="total">-</span>
-                        <input type="hidden" id="totalInput" name="total" />
-                    </div>
-
-                    <div class='buy'>
-                        <button class='button' type="submit">Pay by Card</button>
-                        <div class="paypal-button-container" style="text-align: center">
-                            <div id="paypal-button-container"></div>
-                            <div class="overlay">Pay by Paypal</div>
-                        </div>
-                        <script
-                            src="https://www.paypal.com/sdk/js?client-id=AZj0-t_IitIxqxVv9ns7J2Ut7LGrg2NxCT4xpXad8FRHRGFR46DZFiIyzUCXjgITuC1JaRSlSxF-amMp&enable-funding=venmo&currency=AUD&disable-funding=card"
-                            data-sdk-integration-source="button-factory"
-                        ></script>
-
-                        <button class='button'>
-                            <a href='index.html'>Shopping</a>
-                        </button>
-                    </div>
-                </form>
             </div>
 
             <div class="footer">© 2024 iBuy. All Rights Reserved .</div>
         </div>
     </body>
-                    
-    <script src="js/costCalculation.js"></script>
+
+    <script src="/iBuy/js/quantity.js"></script>
 </html>

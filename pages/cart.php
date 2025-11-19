@@ -3,17 +3,17 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" type="text/css" href="css/styles.css" />
-        <link rel="stylesheet" type="text/css" href="css/responsive.css" />
+        <link rel="stylesheet" type="text/css" href="/iBuy/css/styles.css" />
+        <link rel="stylesheet" type="text/css" href="/iBuy/css/responsive.css" />
         <title>iBuy</title>
     </head>
     <body>
-        <header>
+    <header>
             <div class="container">
-                <a class="logo-mobile" href="index.html">
-                    <img class="logo" src="./assets/logo.png" alt="" />
+                <a class="logo-mobile" href="home">
+                    <img class="logo" src="/iBuy/assets/logo.png" alt="" />
                 </a>
-                <form class="search search-mobile" action="search.php" method="POST">
+                <form class="search search-mobile" action="search" method="POST">
                     <input type="text" name="search" />
                     <button type="submit" class="search-icon">
                         <div>
@@ -30,11 +30,13 @@
                         </div>
                     </button>
                 </form>
-
+                
                 <?php
-                    session_start();
-                    require_once('connection/conn_iBuyDb.php');
+                    include __DIR__ . '/../model/Cart.php';
+                    include __DIR__ . '/../model/Product.php';
+                    require_once __DIR__ . '/../connection/conn_iBuyDb.php';
 
+                    session_start();
                     if(isset($_SESSION['loggedin'])) {
                         $userName = ucfirst($_SESSION['first_name']).' '.ucfirst($_SESSION['last_name']);
                         echo "
@@ -48,11 +50,11 @@
                                     </div>
                                     <div class='separate'></div>
                                     <div class='log-in'>
-                                        <a href='controller/logout.php'><p>Log Out</p></a>
+                                        <a href='logout'><p>Log Out</p></a>
                                     </div>
                                     <div class='separate'></div>
                                     <div class='cart-icon'>
-                                        <a href='cart.php'>
+                                        <a href='cart'>
                                             <svg
                                                 fill='white'
                                                 xmlns='http://www.w3.org/2000/svg'
@@ -92,11 +94,11 @@
                             echo "
                                     <div class='not-loggedin'>
                                         <div class='sign-up'>
-                                            <a href='signup.php'><p>Sign Up</p> </a>
+                                            <a href='signup'><p>Sign Up</p> </a>
                                         </div>
                                         <div class='separate'></div>
                                         <div class='log-in'>
-                                            <a href='login.php'><p>Log In</p></a>
+                                            <a href='login'><p>Log In</p></a>
                                         </div>
                                     </div>
                                 ";
@@ -106,68 +108,97 @@
         </header>
 
         <div class="container">
-            <div class="banner hide">
-                <div class="mySlides fade">
-                    <img src="./assets/banner/banner1.jpg" style="width:80%" />
+            <div class="cart">
+                <div class="title">Cart</div>
+                <div class="subject">
+                    <input type="checkbox" style="opacity:0" />
+                    <div class="subject-product">Product</div>
+                    <div class="subject-price">Unit Price</div>
+                    <div class="subject-quantity">Quantity</div>
+                    <div class="subject-cost">Cost</div>
                 </div>
 
-                <div class="mySlides fade">
-                    <img src="./assets/banner/banner2.jpg" style="width:80%" />
-                </div>
-
-                <div class="mySlides fade">
-                    <img src="./assets/banner/banner3.jpg" style="width:80%" />
-                </div>
-
-                <!-- Next and previous buttons -->
-                <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-                <a class="next" onclick="plusSlides(1)">&#10095;</a>
-            </div>
-            <br />
-
-            <!-- The dots/circles -->
-            <div class="hide" style="text-align: center">
-                <span class="dot" onclick="currentSlide(1)"></span>
-                <span class="dot" onclick="currentSlide(2)"></span>
-                <span class="dot" onclick="currentSlide(3)"></span>
-            </div>
-
-            <div class="title">Search Result</div>
-            
-            <div class="product-list">
                 <?php
-                    $searchInput = $_POST['search'];
-                    $searchQuery = "SELECT * FROM products WHERE name LIKE '%$searchInput%'";
-                    $searchResult = mysqli_query($link, $searchQuery);
-                
-                    // Check if any rows are returned
-                    if(mysqli_num_rows($searchResult) > 0) {
-                        // Fetch data and display it in a table
-                        while($row = mysqli_fetch_assoc($searchResult)) {
+                    $cart = new Cart();
+                    if(isset($_SESSION['counter']) && $_SESSION['counter'] > 0) {
+                        $cart = unserialize($_SESSION['cart']);
+                        $products = $cart->products;
+                        $key = array_keys($products);
+                        for($i = 0; $i < $cart->get_depth(); $i++) {
+                            $product = $cart->get_product($key[$i]);
+                            $product_id = $product->get_product_id();
+                            $product_des = $product->get_product_des();
+                            $qty = $product->get_qty();
+                            $unit_price = $product->get_unit_price();
+                            $product_img= $product->get_product_img();
+
                             echo "
-                                <div>
-                                    <a class='product-item' href='product.php?id=$row[product_id]'>
-                                        <img src='./assets/product/$row[product_image]'/>
-                                    </a>
-                                    <p class='discription'>$row[name]</p>
-                                    <p class='symbol'>$<span class='price'>$row[price]</span></p>
-                                </div>
-                            
+                                    <div class='content'>
+                                        <form action='deleteCartItem?order_detail_id=$key[$i]' method='POST'>
+                                            <input name='deleteButton' class='deleteButton' type='submit' value='X' />
+                                        </form>
+                                        <div class='content-product'>
+                                            <img src='/iBuy/assets/product/$product_img'/>
+                                            <p>
+                                                $product_des
+                                            </p>
+                                        </div>
+                                        <div style='display: flex; justify-content:center'>
+                                            <span>$</span>
+                                            <span class='content-price'>$unit_price</span>
+                                        </div>
+                                        <form action='changeQuantity?order_detail_id=$key[$i]' class='quantity-button quantity-button-mobile' method='POST'>
+                                            <button type='submit' class='decrease'>-</button>
+                                            <input class='quantity' name='quantity' value='$qty' />
+                                            <button type='submit' class='increase'>+</button>
+                                        </form>
+                                        <div style='display:flex; justify-content:center'>
+                                            <span>$</span>
+                                            <span class='content-cost'>-</span>
+                                        </div>
+                                    </div>
                             ";
                         }
                     }else {
                         echo "0 results";
                     }
-                
                     mysqli_close($link);
+                    
                 ?>
+                
+                <form action="paymentDetail" method="POST">
+                    <div class="total">
+                        <span style="font-size: 16px">GST Included: $</span>
+                        <span style="font-size: 16px" id="gst">-</span>
+                        <input type="hidden" id="gstInput" name="gst" />
+                    </div>
+                    <div class="total">
+                        <span>Total: $</span>
+                        <span id="total">-</span>
+                        <input type="hidden" id="totalInput" name="total" />
+                    </div>
+
+                    <div class='buy'>
+                        <button class='button' type="submit">Pay by Card</button>
+                        <div class="paypal-button-container" style="text-align: center">
+                            <div id="paypal-button-container"></div>
+                            <div class="overlay">Pay by Paypal</div>
+                        </div>
+                        <script
+                            src="https://www.paypal.com/sdk/js?client-id=AZj0-t_IitIxqxVv9ns7J2Ut7LGrg2NxCT4xpXad8FRHRGFR46DZFiIyzUCXjgITuC1JaRSlSxF-amMp&enable-funding=venmo&currency=AUD&disable-funding=card"
+                            data-sdk-integration-source="button-factory"
+                        ></script>
+
+                        <button class='button'>
+                            <a href='home'>Shopping</a>
+                        </button>
+                    </div>
+                </form>
             </div>
 
             <div class="footer">© 2024 iBuy. All Rights Reserved .</div>
         </div>
     </body>
-
-    <script src="js/banner.js"></script>
-   
+                    
+    <script src="/iBuy/js/costCalculation.js"></script>
 </html>
-
